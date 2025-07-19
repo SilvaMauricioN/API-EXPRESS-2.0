@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const {getObras, getObraPorId } = require('../Controllers/Obras');
+const {getObras, getObraPorId } = require('../controllers/Obras');
 const ruta = Router();
 
 ruta.get('/Obras/Artista', getObras);

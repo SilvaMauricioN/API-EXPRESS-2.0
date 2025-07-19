@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const {getColeccion } = require('../Controllers/Coleccion');
+const {getColeccion } = require('../controllers/Coleccion');
 const ruta = Router();
 
 ruta.get('/Coleccion', getColeccion);
