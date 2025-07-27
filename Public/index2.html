@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Página de Ayuda, Documentación API</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+
+	<body>
+		<h1>Documentación API</h1>
+		<p>Bienvenido a la Api. Aquí encontraras como usar los endpoints. Api de consulta RIJKS DATA</p>
+
+		<!-- Endpoint 1 -->
+		<div class="endpoint">
+			<h2><span class="method">GET</span> museorijks.onrender.com/api/MuseoRijks/Artistas</h2>
+			<p>Recupera una lista de los Artistas, de los que se tienen obras en exposicion.</p>
+			<h3>Ejemplo:</h3>
+			<pre> GET museorijks.onrender.com/api/MuseoRijks/Artistas</pre>
+			<h3>Respuesta:</h3>
+			<pre>
+			[
+			    {
+				  "key": "anonymous",
+				  "value": 193039
+			    },
+			    {
+				  "key": "Ed van der Elsken",
+				  "value": 7652
+			    },
+			    {
+				  "key": "George Hendrik Breitner",
+				  "value": 5584
+			    },
+			    {
+				  "key": "Jan Luyken",
+				  "value": 4856
+			    },
+			    {
+				  "key": "Reinier Vinkeles (I)",
+				  "value": 4559
+			    },
+			    ...
+			]</pre
+			>
+		</div>
+		<!-- Endpoint 2 -->
+		<div>
+			<h1>Parámetros disponibles</h1>
+			<p>Los siguientes parámetros pueden ser utilizados al realizar una petición a <code>/api/coleccion</code>:</p>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Parámetro</th>
+						<th>Formato</th>
+						<th>Por defecto</th>
+						<th>Notas</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><pagina</td>
+						<td>número entero</td>
+						<td>1</td>
+						<td>Página de resultados solicitada.</td>
+					</tr>
+					<tr>
+						<td>limite</td>
+						<td>número entero</td>
+						<td>20</td>
+						<td>Cantidad máxima de resultados por página.</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h2>Ejemplos de uso</h2>
+			<ul>
+				<li>
+					<p>GET http://localhost:8080/api/MuseoRijks/Coleccion</p>
+					<p>Devuelve la primera página con 20 resultados (valores por defecto).</p>
+				</li>
+				<li>
+					<p>GET http://localhost:8080/api/MuseoRijks/Coleccion?pagina=2</p>
+					<p>Devuelve la segunda página con 20 resultados.</p>
+				</li>
+				<li>
+					<p>GET http://localhost:8080/api/MuseoRijks/Coleccion?pagina=1&limite=5</p>
+					<p>Devuelve la primera página con solo 5 resultados por página.</p>
+				</li>
+			</ul>
+
+			<h2>Ejemplo de respuesta</h2>
+
+			<pre class="endpoint">
+				<code>
+				{
+					"status": "success",
+					"mensaje": "Colección de obras de arte recuperada exitosamente.",
+					"paginacion": {
+						"resultadoTotal": 52,
+						"paginaActual": 1,
+						"limite": 20,
+						"paginasTotales": 3
+					},
+					"data": [					
+						{
+						"objectnumber": "SK-C-597",
+						"title": "Retrato de una Mujer, Probablemente Maria Trip (1619-1683)",
+						"hasimage": true,
+						"principalOrFirstMaker": "Rembrandt van Rijn",
+						"longtitle": "Retrato de una Mujer, Probablemente Maria Trip (1619-1683), Rembrandt van Rijn, 1639",
+						"webImage": {
+							"width": 4351,
+							"height": 5754,
+							"url": "https://lh3.googleusercontent.com/AyiKhdEW..."
+						},					
+						...
+					]
+				}
+				</code>
+			</pre>
+		</div>
+
+		<div class="endpoint">
+			<h2><span class="method">GET</span> museorijks.onrender.com/api/MuseoRijks/Coleccion</h2>
+			<p>Recupera una Colecion de diversas obras</p>
+			<h3>Ejemplo:</h3>
+			<pre>
+			GET museorijks.onrender.com/api/MuseoRijks/Coleccion
+		</pre
+			>
+			<h3>Respuesta:</h3>
+			<pre>
+			[				
+				{
+					"links": {
+						"self": "http://www.rijksmuseum.nl/api/en/collection/SK-C-1629",
+						"web": "http://www.rijksmuseum.nl/en/collection/SK-C-1629"
+					},
+					"id": "en-SK-C-1629",
+					"objectNumber": "SK-C-1629",
+					"title": "Suicide of Queen Dido",
+					"hasImage": true,
+					"principalOrFirstMaker": "anonymous",
+					"longTitle": "Suicide of Queen Dido, anonymous, c. 1800",
+					"showImage": true,
+					"permitDownload": true,
+					"webImage": {
+						"guid": "4d9849d4-cac1-4921-b34b-dc347ecb895d",
+						"offsetPercentageX": 0,
+						"offsetPercentageY": 0,
+						"width": 1889,
+						"height": 2628,
+						"url": "https://lh3.ggpht.com/lI7LSywrAQYjqVIJKAv_Bd5kWldlNckDQyqtZCkf7_FKA4g5grhdSX61Wqodt6pSydixCAWJ30psSbTRRS1_CIWDhqs=s0"
+					},
+				...
+				}				
+			]     
+		</pre
+			>
+		</div>
+
+		<!-- Endpoint 3 -->
+		<div class="endpoint">
+			<h2><span class="method">GET</span> museorijks.onrender.com/api/MuseoRijks/Obras/Artista</h2>
+			<p>Recupera Todas las obras de un Artista en particular. Utilizando el parametro de consulta nombreArtista</p>
+			<h3>Ejemplo:</h3>
+			<pre>
+			GET museorijks.onrender.com/api/MuseoRijks/Obras/Artista?nombreArtista=Rembrandt+van+Rijn
+		</pre
+			>
+			<h3>Respuesta:</h3>
+			<pre>
+			[
+				{
+					"links": {
+					"self": "http://www.rijksmuseum.nl/api/nl/collection/SK-C-5",
+					"web": "http://www.rijksmuseum.nl/nl/collectie/SK-C-5"
+					},
+					"id": "nl-SK-C-5",
+					"objectNumber": "SK-C-5",
+					"title": "De Nachtwacht",
+					"hasImage": true,
+					"principalOrFirstMaker": "Rembrandt van Rijn",
+					"longTitle": "De Nachtwacht, Rembrandt van Rijn, 1642",
+					"showImage": true,
+					"permitDownload": true,
+					"webImage": {
+					"guid": "bbd1fae8-4023-4859-8ed1-d38616aec96c",
+					"offsetPercentageX": 0,
+					"offsetPercentageY": 1,
+					"width": 5656,
+					"height": 4704,
+					"url": "https://lh3.googleusercontent.com/SsEIJWka3_cYRXXSE8VD3XNOgtOxoZhqW1uB6UFj78eg8gq3G4jAqL4Z_5KwA12aD7Leqp27F653aBkYkRBkEQyeKxfaZPyDx0O8CzWg=s0"
+					},
+					...
+				}
+			]     
+		</pre
+			>
+		</div>
+
+		<!-- Endpoint 4 -->
+		<div class="endpoint">
+			<h2><span class="method">GET</span> museorijks.onrender.com/api/MuseoRijks/Obra/:id</h2>
+			<p>Recupera una obra en particular a partir de su id.Utilizando un parametro de ruta para la consulta.</p>
+			<h3>Ejemplo:</h3>
+			<pre>
+			GET museorijks.onrender.com/api/MuseoRijks/Obra/SK-C-5
+		</pre
+			>
+			<h3>Respuesta:</h3>
+			<pre>
+			{
+				"id": "nl-SK-C-5",
+				"objectNumber": "SK-C-5",
+				"title": "De Nachtwacht",
+				"longTitle": "De Nachtwacht, Rembrandt van Rijn, 1642",
+				"copyrightHolder": null,
+				"url": "https://lh3.googleusercontent.com/SsEIJWka3_cYRXXSE8VD3XNOgtOxoZhqW1uB6UFj78eg8gq3G4jAqL4Z_5KwA12aD7Leqp27F653aBkYkRBkEQyeKxfaZPyDx0O8CzWg=s0",
+				"titles": [
+				"Officieren en andere schutters van wijk II in Amsterdam, onder leiding van kapitein Frans Banninck Cocq en luitenant Willem van Ruytenburch, bekend als ‘De Nachtwacht’",
+				"Het korporaalschap van kapitein Frans Banninck Cocq en luitenant Willem van Ruytenburch, bekend als de 'Nachtwacht'"
+				],
+				"description": "Officieren en andere schutters van wijk II in Amsterdam onder leiding van kapitein Frans Banninck Cocq en luitenant Willem van Ruytenburch, sinds het einde van de 18de eeuw bekend als ‘De Nachtwacht’. Schutters van de Kloveniersdoelen uit een poort naar buiten tredend. Op een schild aangebracht naast de poort staan de namen van de afgebeelde personen: Frans Banning Cocq, heer van purmerlant en Ilpendam, Capiteijn Willem van Ruijtenburch van Vlaerdingen, heer van Vlaerdingen, Lu[ij]tenant, Jan Visscher Cornelisen Vaendrich, Rombout Kemp Sergeant, Reijnier Engelen Sergeant, Barent Harmansen, Jan Adriaensen Keyser, Elbert Willemsen, Jan Clasen Leydeckers, Jan Ockersen, Jan Pietersen bronchorst, Harman Iacobsen wormskerck, Jacob Dircksen de Roy, Jan vander heede, Walich Schellingwou, Jan brugman, Claes van Cruysbergen, Paulus Schoonhoven. De schutters zijn gewapend met onder anderen pieken, musketten en hellebaarden. Rechts de tamboer met een grote trommel. Tussen de soldaten links staat een meisje met een dode kip om haar middel, rechts een blaffende hond. Linksboven de vaandrig met de uitgestoken vaandel.",
+				"objectTypes": [
+				"schilderij"
+				],
+				"objectCollection": [
+				"schilderijen"
+				],
+				"principalMaker": "Rembrandt van Rijn",
+				"materials": [
+				"doek",
+				"olieverf"
+				],
+				"techniques": [
+				
+				],
+				"productionPlaces": [
+				"Amsterdam"
+				],
+				"dating": {
+				"presentingDate": "1642",
+				"sortingDate": 1642,
+				"period": 17,
+				"yearEarly": 1642,
+				"yearLate": 1642
+				},
+				"Dimensions": [
+				{
+					"unit": "cm",
+					"type": "hoogte",
+					"precision": null,
+					"part": null,
+					"value": "379,5"
+				},
+				{
+					"unit": "cm",
+					"type": "breedte",
+					"precision": null,
+					"part": null,
+					"value": "453,5"
+				},
+				{
+					"unit": "kg",
+					"type": "gewicht",
+					"precision": null,
+					"part": null,
+					"value": "337"
+				},
+				{
+					"unit": "kg",
+					"type": "gewicht",
+					"precision": null,
+					"part": null,
+					"value": "170"
+				}
+				],
+				"physicalMedium": "olieverf op doek"
+			}
+		
+		</pre
+			>
+		</div>
+	</body>
+</html>

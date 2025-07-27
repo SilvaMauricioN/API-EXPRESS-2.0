@@ -1,18 +1,20 @@
 {
-  "name": "api_express",
-  "version": "1.0.0",
-  "description": "Trabajo practico I, Laboratorio de Computación IV",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app"
-  },
-  "author": "Silva Mauricio Nicolás R.",
-  "license": "ISC",
-  "dependencies": {
-    "axios": "^1.5.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2"
-  }
+	"name": "api_express",
+	"version": "1.0.0",
+	"description": "Trabajo practico I, Laboratorio de Computación IV",
+	"main": "app.js",
+	"type": "module",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node app"
+	},
+	"author": "Silva Mauricio Nicolás R.",
+	"license": "ISC",
+	"dependencies": {
+		"axios": "^1.5.0",
+		"cors": "^2.8.5",
+		"dotenv": "^16.3.1",
+		"express": "^4.18.2",
+		"pg": "^8.16.3"
+	}
 }

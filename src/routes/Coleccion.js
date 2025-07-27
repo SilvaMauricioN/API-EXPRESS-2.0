@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const {getColeccion } = require('../controllers/Coleccion');
-const ruta = Router();
+import { Router } from 'express';
+import { getColeccion } from '../controllers/Coleccion.js';
 
+const ruta = Router();
 ruta.get('/Coleccion', getColeccion);
-module.exports = ruta;
+export default ruta;

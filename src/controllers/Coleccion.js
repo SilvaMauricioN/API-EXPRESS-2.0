@@ -1,31 +1,24 @@
-const axios = require('axios');
-const apiKey = process.env.API_KEY;
-const baseUrl = "https://www.rijksmuseum.nl/api/en/collection";
+import { getCantidadObras, getColeccionObras } from '../repositories/repositorioColeccion.js';
+import { calcularPaginacion } from '../utils/paginacion.js';
+import { repuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
 
-const getColeccion = (req, res) => {    
-    axios.get(baseUrl + `?key=${apiKey}&material=canvas&ps=30&s=relevance&imgonly=True`)
-        .then(({ data }) => {
-            const { artObjects } = data;
-            res.status(200).json(artObjects);
-        })
-        .catch((error)=>{
-            //si sucede una respuesta de error de axiso, es decir de la api
-            if(error.response){
-                const { status, statusText, data } = error.response;
-                res.status(status).json({
-                    status:status,
-                    msg:statusText,
-                    detalle:data
-                });
-            } else{
-                res.status(500).json({
-                    status:500,
-                    msg: 'Error inesperado'
-                });
-            }
-        });
-}
+const getColeccion = async (req, res) => {
+	try {
+		const pagina = parseInt(req.query.pagina) || 1;
+		const limite = parseInt(req.query.limite) || 20;
+		const offset = (pagina - 1) * limite;
 
-module.exports = {
-    getColeccion
-}
+		const cantidadObras = await getCantidadObras();
+		const coleccionObras = await getColeccionObras(offset, limite);
+		const paginacion = calcularPaginacion(cantidadObras, pagina, limite);
+
+		res
+			.status(200)
+			.json(respuestaExitosa('Colección de obras de arte recuperada exitosamente.', coleccionObras, paginacion));
+	} catch (error) {
+		console.error('Error al obtener las obras:', error.message);
+		res.status(500).json(repuestaError('Error interno del servidor al obtener obras.', error.message));
+	}
+};
+
+export { getColeccion };

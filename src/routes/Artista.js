@@ -1,10 +1,7 @@
-const { Router } = require('express');
-const {  getArtistas} = require('../controllers/Artista');
+import { Router } from 'express';
+import { getArtistas } from '../controllers/Artista.js';
+
 const ruta = Router();
 
 ruta.get('/Artistas', getArtistas);
-module.exports = ruta;
-
-
-
-
+export default ruta;
