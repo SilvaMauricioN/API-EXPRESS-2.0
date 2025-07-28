@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { getObraNumeroObjeto } from '../repositories/repositorioObra.js';
+import { repuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
 const apiKey = process.env.API_KEY;
 
 const getObras = (req, res) => {
@@ -26,77 +28,22 @@ const getObras = (req, res) => {
 			}
 		});
 };
-const getObraPorId = (req, res) => {
-	const { id } = req.params;
-	axios
-		.get(`https://www.rijksmuseum.nl/api/en/collection/${id}?key=${apiKey}`)
-		.then(({ data }) => {
-			const { artObject } = data;
 
-			if (!artObject.webImage) {
-				artObject.webImage = { url: '' };
-			}
-			const {
-				id,
-				objectNumber,
-				title,
-				longTitle,
-				copyrightHolder,
-				webImage: { url },
-				titles,
-				description,
-				objectTypes,
-				objectCollection,
-				principalMaker,
-				materials,
-				techniques,
-				productionPlaces,
-				dating,
-				periods,
-				places,
-				dimensions,
-				physicalMedium
-			} = artObject;
+const getObraPorId = async (req, res) => {
+	try {
+		const idObject = req.query.numeroObjeto;
+		const obra = await getObraNumeroObjeto(idObject);
 
-			const obraDetalles = {
-				id,
-				objectNumber,
-				title,
-				longTitle,
-				copyrightHolder,
-				url,
-				titles,
-				description,
-				objectTypes,
-				objectCollection,
-				principalMaker,
-				materials,
-				techniques,
-				productionPlaces,
-				dating,
-				periods,
-				places,
-				dimensions,
-				physicalMedium
-			};
+		const hayResultado = obra.length > 0;
+		const mensaje = hayResultado
+			? 'Obra de arte recuperada exitosamente.'
+			: `No se ha encontrado obra para el identificador: "${idObject}".`;
 
-			res.status(200).json(obraDetalles);
-		})
-		.catch((error) => {
-			//si sucede una respuesta de error de axiso, es decir de la api
-			if (error.response) {
-				const { status, statusText, data } = error.response;
-				res.status(status).json({
-					status: status,
-					msg: statusText,
-					detalle: data
-				});
-			} else {
-				res.status(500).json({
-					status: 500,
-					msg: 'Error inesperado'
-				});
-			}
-		});
+		res.status(200).json(respuestaExitosa(mensaje, obra, null, hayResultado));
+	} catch (error) {
+		console.error('Error al obtener la obra:', error.message);
+		res.status(500).json(repuestaError('Error interno del servidor al obtener obra.', error.message));
+	}
 };
+
 export { getObraPorId, getObras };

@@ -1,7 +1,7 @@
 import express from 'express';
-import artistaRoutes from '../Routes/Artista.js';
-import coleccionRoutes from '../Routes/Coleccion.js';
-import obrasRoutes from '../Routes/Obras.js';
+import artistaRoutes from '../routes/Artista.js';
+import coleccionRoutes from '../routes/Coleccion.js';
+import obrasRoutes from '../routes/Obras.js';
 
 export default class Server {
 	constructor() {
