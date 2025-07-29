@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { getColeccionArtista } from '../controllers/Artista.js';
+import { getColeccionArtista, getListadoArtistas } from '../controllers/Artista.js';
 
 const ruta = Router();
 
-ruta.get('/Artista', getColeccionArtista);
+ruta.get('/autor', getColeccionArtista);
+ruta.get('/autores', getListadoArtistas);
 export default ruta;

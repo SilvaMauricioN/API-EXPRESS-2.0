@@ -15,9 +15,9 @@ export default class Server {
 		this.app.use(express.static('Public'));
 	}
 	routers() {
-		this.app.use('/api/MuseoRijks/', coleccionRoutes);
-		this.app.use('/api/MuseoRijks/', artistaRoutes);
-		this.app.use('/api/MuseoRijks/', obrasRoutes);
+		this.app.use('/api/museorijks/coleccion', coleccionRoutes);
+		this.app.use('/api/museorijks/coleccion', artistaRoutes);
+		this.app.use('/api/museorijks/coleccion', obrasRoutes);
 		this.app.all('*', (req, res) => {
 			res.status(404).json({
 				statusCode: 404,
@@ -31,4 +31,3 @@ export default class Server {
 		});
 	}
 }
-//export default { Server };

@@ -1,4 +1,5 @@
-import { getCantidadObras, getColeccionObras } from '../repositories/repositorioColeccion.js';
+import { getColeccionObras } from '../repositories/repositorioColeccion.js';
+import { getCantidadObras } from '../repositories/repositorioObra.js';
 import { calcularPaginacion } from '../utils/paginacion.js';
 import { repuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
 
@@ -12,9 +13,11 @@ const getColeccion = async (req, res) => {
 		const coleccionObras = await getColeccionObras(offset, limite);
 		const paginacion = calcularPaginacion(cantidadObras, pagina, limite);
 
-		res
-			.status(200)
-			.json(respuestaExitosa('Colección de obras de arte recuperada exitosamente.', coleccionObras, paginacion));
+		const hayResultado = cantidadObras > 0;
+		const mensaje = hayResultado
+			? 'Colección de obras de arte recuperada exitosamente.'
+			: `No se ha encontrado coleccion de obra.`;
+		res.status(200).json(respuestaExitosa(mensaje, coleccionObras, paginacion));
 	} catch (error) {
 		console.error('Error al obtener las obras:', error.message);
 		res.status(500).json(repuestaError('Error interno del servidor al obtener obras.', error.message));

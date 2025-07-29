@@ -25,27 +25,6 @@ const getColeccionObras = async (offset, limite) => {
 	return data.rows;
 };
 
-// Funcion para obtener el TOTAL de resultados
-const getCantidadObras = async (artista = null) => {
-	let consulta;
-	let valores = [];
-
-	if (artista) {
-		consulta = `
-			SELECT COUNT(*) 
-			FROM artObjects ao
-			JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker
-			WHERE ao.hasImage = TRUE
-			AND pm.name = $1;
-		`;
-		valores = [artista];
-	} else {
-		consulta = `SELECT COUNT(*) FROM artObjects WHERE hasImage = TRUE;`;
-	}
-	const resultadoTotal = await pool.query(consulta, valores);
-	return parseInt(resultadoTotal.rows[0].count);
-};
-
 const getColeccionObrasArtista = async (offset, limite, artista) => {
 	const consulta = `
             SELECT 
@@ -72,4 +51,4 @@ const getColeccionObrasArtista = async (offset, limite, artista) => {
 	return data.rows;
 };
 
-export { getCantidadObras, getColeccionObras, getColeccionObrasArtista };
+export { getColeccionObras, getColeccionObrasArtista };

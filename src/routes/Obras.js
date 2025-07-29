@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import { getObraPorId, getObras } from '../controllers/Obras.js';
+import { getObraPorId } from '../controllers/Obras.js';
 
 const ruta = Router();
 
-ruta.get('/Obras/Artista', getObras);
-ruta.get('/Obra/', getObraPorId);
+ruta.get('/obra/:id', getObraPorId);
 export default ruta;
