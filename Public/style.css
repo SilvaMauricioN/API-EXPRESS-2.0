@@ -191,6 +191,7 @@ tbody tr:not(:last-child) td {
 pre {
 	margin: 0;
 	overflow-x: auto;
+	tab-size: 2;
 }
 
 code {

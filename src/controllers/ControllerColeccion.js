@@ -1,7 +1,7 @@
 import { getColeccionObras } from '../repositories/repositorioColeccion.js';
 import { getCantidadObras } from '../repositories/repositorioObra.js';
 import { calcularPaginacion } from '../utils/paginacion.js';
-import { repuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
+import { respuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
 
 const getColeccion = async (req, res) => {
 	try {
@@ -19,8 +19,11 @@ const getColeccion = async (req, res) => {
 			: `No se ha encontrado coleccion de obra.`;
 		res.status(200).json(respuestaExitosa(mensaje, coleccionObras, paginacion));
 	} catch (error) {
-		console.error('Error al obtener las obras:', error.message);
-		res.status(500).json(repuestaError('Error interno del servidor al obtener obras.', error.message));
+		console.error('Error al obtener las obras:', error); // muestra todo
+		console.error('Tipo de error:', typeof error);
+		console.error('Error.message:', error?.message);
+		console.error('Error al obtener las obras:', error?.message);
+		res.status(500).json(respuestaError('Error interno del servidor al obtener obras.', error.message));
 	}
 };
 

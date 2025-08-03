@@ -20,7 +20,7 @@ const respuestaExitosa = (mensaje, data, paginacion = null, hayResultado = null,
 	return respuesta;
 };
 
-const repuestaError = (mensaje, detalle = null) => {
+const respuestaError = (mensaje, detalle = null) => {
 	const respuesta = {
 		status: 'error',
 		mensaje: mensaje
@@ -33,4 +33,4 @@ const repuestaError = (mensaje, detalle = null) => {
 	return respuesta;
 };
 
-export { repuestaError, respuestaExitosa };
+export { respuestaError, respuestaExitosa };

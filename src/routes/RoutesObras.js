@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getObraPorId } from '../controllers/Obras.js';
+import { getObraPorId } from '../controllers/ControllerObras.js';
 
 const ruta = Router();
 
