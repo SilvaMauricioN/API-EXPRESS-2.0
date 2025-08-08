@@ -1,25 +1,27 @@
 import { respuestaError } from '../utils/respuestaApi.js';
 import { validarIdNumerico, validarString } from '../utils/validacionDatos.js';
 
-const validarIdArtista = (req, res, next) => {
-	const id = validarIdNumerico(req.params.idArtista);
+const validarIdParam = (nombreParam) => (req, res, next) => {
+	const id = validarIdNumerico(req.params[nombreParam]);
 	if (!id) {
 		return res
 			.status(400)
-			.json(respuestaError(`ID artista inválido, debe ser un numero entero: '${req.params.idArtista}'`));
+			.json(
+				respuestaError(`ID inválido para '${nombreParam}', debe ser un numero entero: '${req.params[nombreParam]}'`)
+			);
 	}
-	req.idArtista = id;
+	req[nombreParam] = id;
 	next();
 };
 
-const validarNombreOcupacion = (req, res, nect) => {
-	let { nombreOcupacion } = req.body;
-	if (!validarString(nombreOcupacion)) {
+const validarNombreOcupacion = (req, res, next) => {
+	let { name } = req.body;
+	if (!validarString(name)) {
 		return res.status(400).json(respuestaError('Falta el nombre de la ocupacion o es una cadena vacía.'));
 	}
-	nombreOcupacion = nombreOcupacion.trim().toLowerCase().replace(/\s+/g, ' ');
-	req.body.nombreOcupacion = nombreOcupacion;
+	const nombreNormalizado = name.trim().toLowerCase().replace(/\s+/g, ' ');
+	req.body.name = nombreNormalizado;
 	next();
 };
 
-export { validarIdArtista, validarNombreOcupacion };
+export { validarIdParam, validarNombreOcupacion };

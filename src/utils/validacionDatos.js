@@ -13,7 +13,7 @@ const validarIdNumerico = (idString) => {
 };
 
 const validarString = (string) => {
-	return !!string && string.trim().length > 0;
+	return typeof string === 'string' && string.trim().length > 0;
 };
 
 export { validarIdNumerico, validarString };

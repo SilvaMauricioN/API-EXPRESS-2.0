@@ -1,10 +1,9 @@
-import { getOcupacionesDeArtista, obtenerOcupaciones } from '../services/serviceOcupacion.js';
+import * as serviceOcupacion from '../services/serviceOcupacion.js';
 import { respuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
 
-// GET /api/ocupaciones/:idArtista
-const obtenerTodasLasOcupaciones = async (req, res) => {
+const getOcupaciones = async (req, res) => {
 	try {
-		const ocupaciones = await obtenerOcupaciones();
+		const ocupaciones = await serviceOcupacion.getOcupaciones();
 
 		res.json(respuestaExitosa('Ocupaciones obtenidas correctamente.', ocupaciones, null, ocupaciones.length > 0));
 	} catch (error) {
@@ -13,22 +12,11 @@ const obtenerTodasLasOcupaciones = async (req, res) => {
 	}
 };
 
-// GET /api/ocupaciones/:idArtista
-const obtenerOcupacionesArtista = async (req, res) => {
+const getOcupacionesArtistaId = async (req, res) => {
 	try {
 		const artistaId = req.params.idArtista;
 
-		// 		if (artistaId == null) {
-		// 			const mensaje = `ID '${artistaId}' de autor inválido: el parámetro debe ser un número entero.`;
-		//
-		// 			return res.status(400).json({
-		// 				status: 'error',
-		// 				mensaje: mensaje,
-		// 				hayResultado: false,
-		// 				data: null
-		// 			});
-		// 		}
-		const ocupaciones = await getOcupacionesDeArtista(artistaId);
+		const ocupaciones = await serviceOcupacion.getOcupacionesDeArtistaId(artistaId);
 		const hayResultado = ocupaciones.length > 0;
 
 		if (!hayResultado) {
@@ -43,50 +31,65 @@ const obtenerOcupacionesArtista = async (req, res) => {
 		res.status(500).json(respuestaError('Error al obtener ocupaciones.', error.message));
 	}
 };
+//Crear nueva ocupacion
+const postOcupacion = async (req, res) => {
+	try {
+		const { name } = req.body;
+		const nuevaOcupacion = await serviceOcupacion.postOcupacion(name);
+		res.status(201).json(respuestaExitosa('Ocupación creada correctamente.', nuevaOcupacion, null, true));
+	} catch (error) {
+		if (error.tipo === 'duplicado') {
+			return res.status(409).json(respuestaError('Ya existe una ocupación con ese nombre.'));
+		}
+		console.error('Error al crear ocupación:', error);
+		res.status(500).json(respuestaError('Error al crear ocupación.', error.message));
+	}
+};
+//actualiza ocupacion, id ocupacion name a actualizar
+const putOcupacion = async (req, res) => {
+	try {
+		const { idOcupacion } = req.params;
+		const { name } = req.body;
 
-// POST /api/ocupaciones/:idArtista / nombre de ocupacion a artista nombre
-const asignarOcupacion = async (req, res) => {
+		const ocupacionActualizada = await serviceOcupacion.putOcupacion(idOcupacion, name);
+
+		res.json(respuestaExitosa('Ocupación actualizada correctamente.', ocupacionActualizada, null, true));
+	} catch (error) {
+		console.error('Error al actualizar ocupación:', error);
+		res.status(500).json(respuestaError('Error al actualizar ocupación.', error.message));
+	}
+};
+
+const deleteOcupacion = async (req, res) => {
+	try {
+		const { idOcupacion } = req.params;
+		const data = await serviceOcupacion.deleteOcupacion(idOcupacion);
+		res.json(respuestaExitosa('Ocupación eliminada correctamente.', data, null, true));
+	} catch (error) {
+		console.error('Error al eliminar ocupación:', error);
+		res.status(500).json(respuestaError('Error al eliminar ocupación.', error.message));
+	}
+};
+// asignar una ocupacion a un artista
+const putOcupacionArtista = async (req, res) => {
 	try {
 		const artistaId = req.params.idArtista;
-		const { nombreOcupacion } = req.body;
+		const { name } = req.body;
 
-		// if (artistaId) {
-		// 	const mensaje = `ID inválido: el parámetro '${artistaId}' debe ser un número entero.`;
-		// 	return res.status(400).json(respuestaError(mensaje, null));
-		// }
-
-		// if (!validarString(nombreOcupacion)) {
-		// 	return res
-		// 		.status(400)
-		// 		.json(respuestaError('Falta el nombreOcupacion de la ocupación o es una cadena vacía.', null));
-		// }
-
-		const resultado = await putOcupacion(artistaId, nombreOcupacion);
+		const resultado = await serviceOcupacion.putOcupacion(artistaId, name);
 		res.json(respuestaExitosa(resultado.mensaje, resultado, null, resultado.asignada));
 	} catch (error) {
 		console.error(error);
 		res.status(500).json(respuestaError('Error al asignar ocupación.', error.message));
 	}
 };
-
-// DELETE /api/ocupaciones/:idArtista
-const eliminarOcupacionDeArtista = async (req, res) => {
+// quita la relacion de la tabla intermedia entre artista y ocupacion
+const deleteOcupacionDeArtista = async (req, res) => {
 	try {
 		const artistaId = req.params.idArtista;
-		const { nombreOcupacion } = req.body;
+		const { name } = req.body;
 
-		// if (artistaId) {
-		// 	const mensaje = `ID inválido: el parámetro '${artistaId}' debe ser un número entero.`;
-		// 	return res.status(400).json(respuestaError(mensaje, null));
-		// }
-
-		// if (!validarString(nombreOcupacion)) {
-		// 	return res
-		// 		.status(400)
-		// 		.json(respuestaError('Falta el nombreOcupacion de la ocupación o es una cadena vacía.', null));
-		// }
-
-		const resultado = await quitarOcupacion(artistaId, nombreOcupacion);
+		const resultado = await serviceOcupacion.deletOcupacionDeArtista(artistaId, name);
 
 		res.status.json(200).json(
 			respuestaExitosa(
@@ -104,4 +107,12 @@ const eliminarOcupacionDeArtista = async (req, res) => {
 	}
 };
 
-export { asignarOcupacion, eliminarOcupacionDeArtista, obtenerOcupacionesArtista, obtenerTodasLasOcupaciones };
+export {
+	deleteOcupacion,
+	deleteOcupacionDeArtista,
+	getOcupaciones,
+	getOcupacionesArtistaId,
+	postOcupacion,
+	putOcupacion,
+	putOcupacionArtista
+};

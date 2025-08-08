@@ -1,34 +1,50 @@
-import {
-	createOcupacion,
-	eliminarOcupaciondeArtista,
-	getOcupaciones,
-	getOcupacionesDeArtistaId,
-	ocupacionAsignadaAArtista,
-	vincularOcupacion
-} from '../repositories/repositorioOcupacion.js';
+import * as repositorioOcupacion from '../repositories/repositorioOcupacion.js';
 
-const obtenerOcupaciones = async () => {
-	const ocupaciones = await getOcupaciones();
+const getOcupaciones = async () => {
+	const ocupaciones = await repositorioOcupacion.getOcupaciones();
 	return ocupaciones;
 };
-
 // Obtener ocupaciones asignadas a un artista
-const getOcupacionesDeArtista = async (idArtista) => {
-	return await getOcupacionesDeArtistaId(idArtista);
+const getOcupacionesDeArtistaId = async (idArtista) => {
+	return await repositorioOcupacion.getOcupacionesDeArtistaId(idArtista);
 };
 
-const crearOcupacionNueva = async (name) => {
-	createOcupacion(name);
+const postOcupacion = async (name) => {
+	let existeOcupacion = await repositorioOcupacion.getOcupacionPorNombre(name);
+	if (existeOcupacion) {
+		const error = new Error('La ocupación ya existe');
+		error.tipo = 'duplicado';
+		throw error;
+	}
+	return await repositorioOcupacion.postOcupacion(name);
 };
 
-// Asignar una ocupación a un artista (crea si no existe, verifica si ya está)
-const putOcupacion = async (idArtista, nombreOcupacion) => {
-	let ocupacion = await getOcupacionPorNombre(nombreOcupacion);
+const putOcupacion = async (idOcupacion, nombreOcupacion) => {
+	const existeOcupacion = await repositorioOcupacion.getOcupacionPorId(idOcupacion);
+	if (!existeOcupacion) {
+		throw new Error('La ocupación no existe.');
+	}
+	const igualOcupacion = await repositorioOcupacion.verificarOcupacionAlActualizar(idOcupacion, nombreOcupacion);
+	if (igualOcupacion) {
+		throw new Error('Ya existe otra ocupación con ese nombre.');
+	}
+	return await repositorioOcupacion.putOcupacion(idOcupacion, nombreOcupacion);
+};
+
+const deleteOcupacion = async (idOcupacion) => {
+	return await repositorioOcupacion.deleteOcupacion(idOcupacion);
+};
+// REEVER Asignar una ocupación a un artista (crea si no existe, verifica si ya está)
+const putOcupacionArtista = async (idArtista, nombreOcupacion) => {
+	let ocupacion = await repositorioOcupacion.getOcupacionPorNombre(nombreOcupacion);
 	//objeto es un valor "verdadero" (truthy)
 	if (!ocupacion) {
-		ocupacion = await createOcupacion(nombreOcupacion);
+		return {
+			asignada: false,
+			mensaje: `La ocupación "${nombreOcupacion}" no existe`
+		};
 	}
-	const yaAsignada = await ocupacionAsignadaAArtista(idArtista, ocupacion.IdOccupation);
+	const yaAsignada = await repositorioOcupacion.ocupacionAsignadaAArtista(idArtista, ocupacion.IdOccupation);
 	if (yaAsignada) {
 		return {
 			asignada: false,
@@ -36,36 +52,43 @@ const putOcupacion = async (idArtista, nombreOcupacion) => {
 		};
 	}
 	// Si no está asignada, la asignamos
-	await vincularOcupacion(idArtista, ocupacion.IdOccupation);
+	await repositorioOcupacion.putOcupacionArtista(idArtista, ocupacion.IdOccupation);
 	return {
 		asignada: true,
 		mensaje: `Ocupación "${nombreOcupacion}" asignada correctamente al artista.`
 	};
 };
+//Eliminar ocupación de un artista
+const deleteOcupacionDeArtista = async (idArtista, nombreOcupacion) => {
+	const ocupacion = await repositorioOcupacion.getOcupacionPorNombre(nombreOcupacion);
+	if (!ocupacion) {
+		return {
+			eliminada: false,
+			mensaje: `La ocupación "${nombreOcupacion}" no existe.`
+		};
+	}
 
-// Eliminar ocupación de un artista
-// const quitarOcupacion = async (idArtista, nombreOcupacion) => {
-// 	const ocupacion = await getOcupacionPorNombre(nombreOcupacion);
-// 	if (!ocupacion) {
-// 		return {
-// 			eliminada: false,
-// 			mensaje: `La ocupación "${nombreOcupacion}" no existe.`
-// 		};
-// 	}
-//
-// 	const yaAsignada = await getOcupacionesDeArtista(idArtista, ocupacion.IdOccupation);
-// 	if (!yaAsignada) {
-// 		return {
-// 			eliminada: false,
-// 			mensaje: `La ocupación "${nombreOcupacion}" no estaba asignada al artista.`
-// 		};
-// 	}
-//
-// 	await eliminarVinculoOcupacion(idArtista, ocupacion.IdOccupation);
-// 	return {
-// 		eliminada: true,
-// 		mensaje: `Ocupación "${nombreOcupacion}" eliminada del artista.`
-// 	};
-// };
+	const yaAsignada = await repositorioOcupacion.ocupacionAsignadaAArtista(idArtista, ocupacion.IdOccupation);
+	if (!yaAsignada) {
+		return {
+			eliminada: false,
+			mensaje: `La ocupación "${nombreOcupacion}" no estaba asignada al artista.`
+		};
+	}
 
-export { crearOcupacionNueva, getOcupacionesDeArtista, obtenerOcupaciones, putOcupacion };
+	await repositorioOcupacion.deleteOcupacionDeArtista(idArtista, ocupacion.IdOccupation);
+	return {
+		eliminada: true,
+		mensaje: `Ocupación "${nombreOcupacion}" eliminada del artista.`
+	};
+};
+
+export {
+	deleteOcupacion,
+	deleteOcupacionDeArtista,
+	getOcupaciones,
+	getOcupacionesDeArtistaId,
+	postOcupacion,
+	putOcupacion,
+	putOcupacionArtista
+};
