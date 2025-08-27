@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import {
 	deleteOcupacion,
-	deleteOcupacionDeArtista,
+	// deleteOcupacionDeArtista,
 	getOcupaciones,
 	getOcupacionesArtistaId,
 	postOcupacion,
 	putOcupacion
 } from '../controllers/controllerOcupacion.js';
-import { validarIdParam, validarNombreOcupacion } from '../middlewares/ocupacionValidacion.js';
+import { validarIdParam, validarNombreOcupacion } from '../middlewares/Validaciones.js';
 
 const ruta = Router();
 
@@ -19,6 +19,6 @@ ruta.delete('/ocupacion/:idOcupacion', validarIdParam('idOcupacion'), deleteOcup
 
 // rutas relacionas con artista y ocupacion
 // ruta.post('/asignar/ocupacion/:idArtista', validarIdParam('idArtista'), validarNombreOcupacion, putOcupacion);
-ruta.delete('/acupacion/:idArtista', validarIdParam('idArtista'), validarNombreOcupacion, deleteOcupacionDeArtista);
+// ruta.delete('/acupacion/:idArtista', validarIdParam('idArtista'), validarNombreOcupacion, deleteOcupacionDeArtista);
 
 export default ruta;

@@ -1,28 +1,23 @@
-import { createArtista, getTodosLosArtistas } from '../repositories/repositorioArtista.js';
-import { getColeccionObrasArtista } from '../repositories/repositorioColeccion.js';
-import { getCantidadObras } from '../repositories/repositorioObra.js';
-import { createArtistaSiNoExiste } from '../services/serviceArtista.js';
-import { calcularPaginacion } from '../utils/paginacion.js';
+import { getTodosLosArtistas } from '../repositories/repositorioArtista.js';
+import * as serviceArtista from '../services/serviceArtista.js';
 import { respuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
 
 //GET retorna todas las obras de un artista especifico
 const getColeccionArtista = async (req, res) => {
 	try {
-		const artista = req.query.artista;
-		const pagina = parseInt(req.query.pagina) || 1;
-		const limite = parseInt(req.query.limite) || 20;
-		const offset = (pagina - 1) * limite;
+		const nombre = req.query.nombre;
+		const pagina = req.query.pagina;
+		const limite = req.query.limite;
 
-		const cantidadObras = await getCantidadObras(artista);
-		const coleccionObras = await getColeccionObrasArtista(offset, limite, artista);
-		const paginacion = calcularPaginacion(cantidadObras, pagina, limite);
+		const { artista, obras, paginacion } = await serviceArtista.getObrasArtista(nombre, pagina, limite);
 
-		const hayResultado = cantidadObras > 0;
-		const mensaje = hayResultado
-			? 'Colección de obras de arte recuperada exitosamente.'
-			: `No se encontraron obras para el artista: "${artista}".`;
+		if (!artista) {
+			return res.status(404).json(respuestaError(`El artista '${nombre}' no existe en la base de datos.`));
+		}
 
-		res.status(200).json(respuestaExitosa(mensaje, coleccionObras, paginacion, hayResultado));
+		const mensaje = 'Colección de obras de arte recuperada exitosamente.';
+
+		res.status(200).json(respuestaExitosa(mensaje, obras, paginacion, obras.length > 0));
 	} catch (error) {
 		console.error('Error al obtener las obras:', error.message);
 		res.status(500).json(respuestaError('Error interno del servidor al obtener obras.', error.message));
@@ -45,18 +40,18 @@ const getListadoArtistas = async (reg, res) => {
 };
 
 //POST Crear un nuevo artista
-const createArtistaNuevo = async (req, res) => {
+const postArtista = async (req, res) => {
 	try {
-		const resultado = await createArtistaSiNoExiste(req.body);
+		const resultado = await serviceArtista.postArtista(req.body);
 
-		const status = resultado.creado ? 201 : 200;
 		const hayResultado = resultado.artista !== null;
 
-		res.status(status).json(respuestaExitosa('No se puede cargar el Artista', resultado, null, hayResultado));
+		res.status(200).json(respuestaExitosa('Artista cargado Exitosamente', resultado, null, hayResultado));
 	} catch (error) {
 		console.error('Error al Crear el Artista:', error.message);
-		res.status(500).json(respuestaError('Error al crear el artista', error.message));
+		const codigo = error.codigo || 500;
+		res.status(codigo).json(respuestaError(error.message, error.detail || null));
 	}
 };
 
-export { createArtistaNuevo, getColeccionArtista, getListadoArtistas };
+export { getColeccionArtista, getListadoArtistas, postArtista };

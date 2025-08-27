@@ -70,6 +70,8 @@ const deleteOcupacion = async (req, res) => {
 		res.status(500).json(respuestaError('Error al eliminar ocupación.', error.message));
 	}
 };
+
+//REEVER SI PERTENECEN A ARTISTA CONTROLLER
 // asignar una ocupacion a un artista
 const putOcupacionArtista = async (req, res) => {
 	try {
@@ -107,12 +109,4 @@ const deleteOcupacionDeArtista = async (req, res) => {
 	}
 };
 
-export {
-	deleteOcupacion,
-	deleteOcupacionDeArtista,
-	getOcupaciones,
-	getOcupacionesArtistaId,
-	postOcupacion,
-	putOcupacion,
-	putOcupacionArtista
-};
+export { deleteOcupacion, getOcupaciones, getOcupacionesArtistaId, postOcupacion, putOcupacion };

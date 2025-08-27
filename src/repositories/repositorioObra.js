@@ -105,4 +105,20 @@ const getCantidadObras = async (artista = null) => {
 	return parseInt(resultadoTotal.rows[0].count);
 };
 
-export { getCantidadObras, getObraNumeroObjeto };
+const getCantidadObras2 = async (idArtista) => {
+	console.log(idArtista);
+	const consulta = `
+			SELECT COUNT(*) ::int AS total
+			FROM artObjects ao
+			JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker
+			WHERE ao.hasImage = TRUE
+			AND pm.name = $1;
+		`;
+	const query = `SELECT COUNT(*)::int AS total FROM artObjects ao
+			JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker WHERE pm.IdPrincipalMaker = $1`;
+	const { rows } = await pool.query(query, [idArtista]);
+	console.log('repositorio obras: ', rows);
+	return rows[0].total;
+};
+
+export { getCantidadObras, getCantidadObras2, getObraNumeroObjeto };

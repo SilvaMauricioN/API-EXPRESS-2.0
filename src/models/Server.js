@@ -18,7 +18,7 @@ export default class Server {
 	}
 	routers() {
 		this.app.use('/api/museorijks/coleccion', coleccionRoutes);
-		this.app.use('/api/museorijks/coleccion', artistaRoutes);
+		this.app.use('/api/museorijks', artistaRoutes);
 		this.app.use('/api/museorijks/coleccion', obrasRoutes);
 		this.app.use('/api/museorijks', ocupacionRoutes);
 

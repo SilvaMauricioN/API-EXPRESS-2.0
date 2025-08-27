@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { createArtistaNuevo, getColeccionArtista, getListadoArtistas } from '../controllers/ControllerArtista.js';
+import { getColeccionArtista, getListadoArtistas, postArtista } from '../controllers/ControllerArtista.js';
+import { validarDatosPaginacion, validarQueryString } from '../middlewares/Validaciones.js';
 
 const ruta = Router();
 
-ruta.get('/autor', getColeccionArtista);
-ruta.get('/autores', getListadoArtistas);
-ruta.post('/autor/nuevo', createArtistaNuevo);
+ruta.get('/coleccion/artista', validarQueryString('nombre'), validarDatosPaginacion, getColeccionArtista);
+ruta.get('/artistas', getListadoArtistas);
+ruta.post('/artista', postArtista);
+
 export default ruta;

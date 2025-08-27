@@ -10,13 +10,11 @@ const getOcupacionesDeArtistaId = async (idArtista) => {
 };
 
 const postOcupacion = async (name) => {
-	let existeOcupacion = await repositorioOcupacion.getOcupacionPorNombre(name);
-	if (existeOcupacion) {
-		const error = new Error('La ocupación ya existe');
-		error.tipo = 'duplicado';
-		throw error;
+	let ocupacion = await repositorioOcupacion.getOcupacionPorNombre(name);
+	if (!ocupacion) {
+		ocupacion = await repositorioOcupacion.postOcupacion(name);
 	}
-	return await repositorioOcupacion.postOcupacion(name);
+	return ocupacion;
 };
 
 const putOcupacion = async (idOcupacion, nombreOcupacion) => {

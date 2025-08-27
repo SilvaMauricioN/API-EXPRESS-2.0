@@ -16,4 +16,8 @@ const validarString = (string) => {
 	return typeof string === 'string' && string.trim().length > 0;
 };
 
-export { validarIdNumerico, validarString };
+const normalizarString = (string) => {
+	return string.trim().toLowerCase().replace(/\s+/g, ' ');
+};
+
+export { normalizarString, validarIdNumerico, validarString };

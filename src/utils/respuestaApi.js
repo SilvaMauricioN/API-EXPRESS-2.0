@@ -1,4 +1,4 @@
-const respuestaExitosa = (mensaje, data, paginacion = null, hayResultado = null, metaData = null) => {
+const respuestaExitosa = (mensaje, data = [], paginacion = null, hayResultado = null, metaData = null) => {
 	const respuesta = {
 		status: 'success',
 		mensaje: mensaje

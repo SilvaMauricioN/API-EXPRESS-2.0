@@ -23,13 +23,20 @@ const getTodosLosArtistas = async () => {
 	return data.rows;
 };
 
+//para verificar si existe un artista
 const getArtistaPorNombre = async (nombre) => {
-	const query = 'SELECT 1 FROM principalMakers WHERE name = $1 LIMIT 1';
-	const { rowCount } = await pool.query(query, [nombre]);
-	return rowCount > 0;
+	const query = `SELECT * FROM principalMakers WHERE LOWER(name) LIKE $1 || '%' LIMIT 1`;
+	const { rows } = await pool.query(query, [nombre]);
+	return rows[0] || null;
 };
 
-const createArtista = async (artistaData) => {
+const getArtistaPorId = async (id) => {
+	const query = 'SELECT * FROM principalMakers WHERE "IdPrincipalMaker" = $1';
+	const { rows } = await pool.query(query, [id]);
+	return rows[0];
+};
+
+const postArtista = async (artistaData) => {
 	const { name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality } = artistaData;
 	const query = `
             INSERT INTO principalMakers (name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality)
@@ -41,7 +48,7 @@ const createArtista = async (artistaData) => {
 	return rows[0];
 };
 
-const updateArtista = async (id, artistaData) => {
+const putArtista = async (id, artistaData) => {
 	const { name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality } = artistaData;
 
 	const query = `
@@ -61,4 +68,8 @@ const updateArtista = async (id, artistaData) => {
 	return rows[0];
 };
 
-export { createArtista, getArtistaPorNombre, getTodosLosArtistas, updateArtista };
+const deleteArtista = async (id) => {
+	return await pool.query('DELETE FROM principalMakers WHERE IdPrincipalMaker = $1 RETURNING *', [id]);
+};
+
+export { deleteArtista, getArtistaPorId, getArtistaPorNombre, getTodosLosArtistas, postArtista, putArtista };

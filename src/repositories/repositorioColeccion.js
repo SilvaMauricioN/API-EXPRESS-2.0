@@ -25,7 +25,7 @@ const getColeccionObras = async (offset, limite) => {
 	return data.rows;
 };
 
-const getColeccionObrasArtista = async (offset, limite, artista) => {
+const getColeccionObrasArtista = async (offset, limite, artistaId) => {
 	const consulta = `
             SELECT 
                 ao.objectNumber,
@@ -39,15 +39,15 @@ const getColeccionObrasArtista = async (offset, limite, artista) => {
                     'height', wi.height,
                     'url', wi.url
                 ) AS "webImage"          
-                FROM artObjects ao
+                FROM artobjects ao
                 LEFT JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker
                 LEFT JOIN webImages wi ON ao.IdArtObject = wi.IdArtObject
                 WHERE ao.hasImage = TRUE AND
-                pm.name = $3
+                pm.IdPrincipalMaker = $3
                 OFFSET $1
                 LIMIT $2; `;
 
-	const data = await pool.query(consulta, [offset, limite, artista]);
+	const data = await pool.query(consulta, [offset, limite, artistaId]);
 	return data.rows;
 };
 
