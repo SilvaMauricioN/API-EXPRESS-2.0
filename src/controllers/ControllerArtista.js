@@ -9,15 +9,12 @@ const getColeccionArtista = async (req, res) => {
 		const pagina = req.query.pagina;
 		const limite = req.query.limite;
 
-		const { artista, obras, paginacion } = await serviceArtista.getObrasArtista(nombre, pagina, limite);
+		const { hayResultado, datos, paginacion } = await serviceArtista.getObrasArtista(nombre, pagina, limite);
+		const mensaje = hayResultado
+			? 'Colección de obras de arte recuperada exitosamente.'
+			: `El artista '${nombre}' no existe en la base de datos.`;
 
-		if (!artista) {
-			return res.status(404).json(respuestaError(`El artista '${nombre}' no existe en la base de datos.`));
-		}
-
-		const mensaje = 'Colección de obras de arte recuperada exitosamente.';
-
-		res.status(200).json(respuestaExitosa(mensaje, obras, paginacion, obras.length > 0));
+		res.status(200).json(respuestaExitosa(mensaje, datos, paginacion, hayResultado));
 	} catch (error) {
 		console.error('Error al obtener las obras:', error.message);
 		res.status(500).json(respuestaError('Error interno del servidor al obtener obras.', error.message));
@@ -25,14 +22,16 @@ const getColeccionArtista = async (req, res) => {
 };
 
 //GET Retorna todos los artistas y especificaciones
-const getListadoArtistas = async (reg, res) => {
+const getListadoArtistas = async (req, res) => {
 	try {
-		const coleccionArtistas = await getTodosLosArtistas();
-		const hayResultado = coleccionArtistas.length > 0;
+		const pagina = req.query.pagina;
+		const limite = req.query.limite;
+
+		const { hayResultado, datos, paginacion } = await serviceArtista.getListadoDeArtistas(pagina, limite);
 
 		const mensaje = hayResultado ? 'Listado de Autores recuperado Exitosamente.' : `No se encontro listado de Autores.`;
 
-		res.status(200).json(respuestaExitosa(mensaje, coleccionArtistas, null, hayResultado));
+		res.status(200).json(respuestaExitosa(mensaje, datos, paginacion, hayResultado));
 	} catch (error) {
 		console.error('Error al obtener listado de Autores:', error.message);
 		res.status(500).json(respuestaError('Error interno del servidor al obtener listado de Autores.', error.message));

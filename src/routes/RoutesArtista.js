@@ -3,9 +3,11 @@ import { getColeccionArtista, getListadoArtistas, postArtista } from '../control
 import { validarDatosPaginacion, validarQueryString } from '../middlewares/Validaciones.js';
 
 const ruta = Router();
-
+//Coleccion de obras de un artista en particular a partir de su nombre
 ruta.get('/coleccion/artista', validarQueryString('nombre'), validarDatosPaginacion, getColeccionArtista);
-ruta.get('/artistas', getListadoArtistas);
+//todos los artistas y sus especificaciones
+ruta.get('/artistas', validarDatosPaginacion, getListadoArtistas);
+//crear un nuevo artista
 ruta.post('/artista', postArtista);
 
 export default ruta;

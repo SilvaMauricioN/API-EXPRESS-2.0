@@ -43,21 +43,19 @@ const validarQueryString = (nombreQuery) => (req, res, next) => {
 
 //parámetros de paginación
 const validarDatosPaginacion = (req, res, next) => {
-	let { page, limit } = req.query;
+	let pagina = Number(req.query.pagina) || 1;
+	let limite = Number(req.query.limite) || 20;
 
-	page = page ? Number(page) : 1;
-	limit = limit ? Number(limit) : 10;
-
-	if (!Number.isInteger(page) || page <= 0) {
-		return res.status(400).json({ error: "El parámetro 'page' debe ser un número entero mayor a 0." });
+	if (!Number.isInteger(pagina) || pagina <= 0) {
+		return res.status(400).json({ error: "El parámetro 'pagina' debe ser un número entero mayor a 0." });
 	}
 
-	if (!Number.isInteger(limit) || limit <= 0 || limit > 100) {
-		return res.status(400).json({ error: "El parámetro 'limit' debe ser un número entero entre 1 y 100." });
+	if (!Number.isInteger(limite) || limite <= 0 || limite > 100) {
+		return res.status(400).json({ error: "El parámetro 'limite' debe ser un número entero entre 1 y 100." });
 	}
 
-	req.query.page = page;
-	req.query.limit = limit;
+	req.query.pagina = pagina;
+	req.query.limite = limite;
 
 	next();
 };

@@ -8,4 +8,20 @@ const calcularPaginacion = (total, pagina, limite) => {
 	};
 };
 
-export { calcularPaginacion };
+const getPaginacion = async (getCantidadFun, getDatosPaginadosFun, page = 1, limit = 20) => {
+	const cantidad = await getCantidadFun();
+	const hayResultado = cantidad > 0;
+
+	if (!hayResultado) {
+		const paginacion = calcularPaginacion(cantidad, page, limit);
+		return { hayResultado, datos: [], paginacion };
+	}
+
+	const offset = (page - 1) * limit;
+	const datos = await getDatosPaginadosFun(offset, limit);
+	const paginacion = calcularPaginacion(cantidad, page, limit);
+
+	return { hayResultado, datos, paginacion };
+};
+
+export { calcularPaginacion, getPaginacion };

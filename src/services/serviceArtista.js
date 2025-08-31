@@ -4,7 +4,7 @@ import * as repositorioColeccion from '../repositories/repositorioColeccion.js';
 import * as repositorioObras from '../repositories/repositorioObra.js';
 import * as repositorioOcupacion from '../repositories/repositorioOcupacion.js';
 import * as serviceOcupacion from '../services/serviceOcupacion.js';
-import { calcularPaginacion } from '../utils/paginacion.js';
+import { calcularPaginacion, getPaginacion } from '../utils/paginacion.js';
 
 const postArtista = async (artistaData) => {
 	const { name, occupations = [] } = artistaData;
@@ -27,19 +27,27 @@ const postArtista = async (artistaData) => {
 
 const getObrasArtista = async (nombre, pagina = 1, limite = 20) => {
 	const artista = await repositorioArtista.getArtistaPorNombre(nombre);
-	console.log(artista);
 
 	if (!artista) {
-		return { Artista: nombre, Obras: [], Paginacio: calcularPaginacion(0, pagina, limite) };
+		const paginacion = calcularPaginacion(0, pagina, limite);
+		return { hayResultado: false, obras: [], paginacion };
 	}
 
-	const numeroObras = await repositorioObras.getCantidadObras2(artista.idprincipalmaker);
-	const offset = (pagina - 1) * limite;
-	const obras = await repositorioColeccion.getColeccionObrasArtista(offset, limite, artista.idprincipalmaker);
-	console.log(obras);
-	const paginacion = calcularPaginacion(numeroObras, pagina, limite);
-
-	return { artista, obras, paginacion };
+	return getPaginacion(
+		() => repositorioObras.getCantidadObras2(artista.idprincipalmaker),
+		(offset, limit) => repositorioColeccion.getColeccionObrasArtista(offset, limit, artista.idprincipalmaker),
+		pagina,
+		limite
+	);
 };
 
-export { getObrasArtista, postArtista };
+const getListadoDeArtistas = async (pagina = 1, limite = 20) => {
+	return getPaginacion(
+		() => repositorioArtista.getCantidadArtistas(),
+		(offset, limit) => repositorioArtista.getTodosLosArtistas(offset, limit),
+		pagina,
+		limite
+	);
+};
+
+export { getListadoDeArtistas, getObrasArtista, postArtista };

@@ -9,12 +9,17 @@ const pool = new Pool({
 	// ssl: { rejectUnauthorized: false, sslmode: 'require' }
 });
 
-pool.on('connect', () => {
-	console.log('Conectado a la base de datos PostgreSQL de Supabase.');
-});
+const verificarConexion = async () => {
+	try {
+		const client = await pool.connect();
+		console.log('✅ Conectado a la base de datos PostgreSQL de Supabase.');
+		client.release();
+	} catch (error) {
+		console.error('❌ Error en la conexión a la base de datos de Supabase:', error.message);
+		process.exit(1);
+	}
+};
 
-pool.on('error', (err) => {
-	console.error('Error en la conexión a la base de datos de Supabase:', err.message, err.stack);
-});
+verificarConexion();
 
 export { pool };

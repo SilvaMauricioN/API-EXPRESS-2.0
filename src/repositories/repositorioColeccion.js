@@ -26,6 +26,7 @@ const getColeccionObras = async (offset, limite) => {
 };
 
 const getColeccionObrasArtista = async (offset, limite, artistaId) => {
+	const safeOffset = offset < 0 ? 0 : offset;
 	const consulta = `
             SELECT 
                 ao.objectNumber,
@@ -47,7 +48,7 @@ const getColeccionObrasArtista = async (offset, limite, artistaId) => {
                 OFFSET $1
                 LIMIT $2; `;
 
-	const data = await pool.query(consulta, [offset, limite, artistaId]);
+	const data = await pool.query(consulta, [safeOffset, limite, artistaId]);
 	return data.rows;
 };
 

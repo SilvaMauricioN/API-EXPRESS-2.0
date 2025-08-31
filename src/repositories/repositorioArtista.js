@@ -1,6 +1,13 @@
 import { pool } from '../db/conexion.js';
 
-const getTodosLosArtistas = async () => {
+const getCantidadArtistas = async () => {
+	const query = `SELECT COUNT(*)::int AS total FROM principalMakers `;
+	const { rows } = await pool.query(query);
+	return rows[0].total;
+};
+
+const getTodosLosArtistas = async (offset, limite) => {
+	const safeOffset = offset < 0 ? 0 : offset;
 	const consulta = `
             SELECT
                 pm.name,
@@ -14,12 +21,13 @@ const getTodosLosArtistas = async () => {
                     FROM makersOccupations mo 
                     JOIN occupations o ON mo.IdOccupation = o.IdOccupation
                     WHERE mo.IdPrincipalMaker = pm.IdPrincipalMaker
-                ) AS "occupations"
-                
-                FROM principalMakers pm;
+                ) AS "occupations"                
+                FROM principalMakers pm
+								OFFSET $1
+                LIMIT $2;
                 `;
 
-	const data = await pool.query(consulta);
+	const data = await pool.query(consulta, [safeOffset, limite]);
 	return data.rows;
 };
 
@@ -72,4 +80,12 @@ const deleteArtista = async (id) => {
 	return await pool.query('DELETE FROM principalMakers WHERE IdPrincipalMaker = $1 RETURNING *', [id]);
 };
 
-export { deleteArtista, getArtistaPorId, getArtistaPorNombre, getTodosLosArtistas, postArtista, putArtista };
+export {
+	deleteArtista,
+	getArtistaPorId,
+	getArtistaPorNombre,
+	getCantidadArtistas,
+	getTodosLosArtistas,
+	postArtista,
+	putArtista
+};
