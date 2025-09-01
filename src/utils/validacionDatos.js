@@ -3,9 +3,9 @@ const validarIdNumerico = (idString) => {
 		return null;
 	}
 
-	const id = parseInt(idString, 10);
+	const id = parseInt(idString.trim(), 10);
 
-	if (isNaN(id) || String(id) !== idString) {
+	if (isNaN(id) || id <= 0 || String(id) !== idString) {
 		return null;
 	}
 

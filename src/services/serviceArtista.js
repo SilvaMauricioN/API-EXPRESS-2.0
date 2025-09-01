@@ -1,4 +1,5 @@
 import { RecursoExistenteError } from '../errors/recursoExistenteError.js';
+import { RecursoNoEncontradoError } from '../errors/recursoNoEncontradoError.js';
 import * as repositorioArtista from '../repositories/repositorioArtista.js';
 import * as repositorioColeccion from '../repositories/repositorioColeccion.js';
 import * as repositorioObras from '../repositories/repositorioObra.js';
@@ -12,7 +13,7 @@ const postArtista = async (artistaData) => {
 
 	if (existe) {
 		throw new RecursoExistenteError(
-			`El artista "${artistaData.name}" ya existe.`,
+			`El artista ${artistaData.name} ya existe.`,
 			`Intento de duplicar un registro con nombre: ${artistaData.name}`
 		);
 	}
@@ -50,4 +51,14 @@ const getListadoDeArtistas = async (pagina = 1, limite = 20) => {
 	);
 };
 
-export { getListadoDeArtistas, getObrasArtista, postArtista };
+const deleteArtista = async (id) => {
+	const existe = await repositorioArtista.getArtistaPorId(id);
+	if (!existe) {
+		throw new RecursoNoEncontradoError(`El artista ${id} no existe.`, `No hay registro del artista con id: ${id}`);
+	}
+	await repositorioOcupacion.eliminarRelacionesOcupaciones(id);
+	const artistaEliminado = await repositorioArtista.deleteArtista(id);
+	return artistaEliminado;
+};
+
+export { deleteArtista, getListadoDeArtistas, getObrasArtista, postArtista };

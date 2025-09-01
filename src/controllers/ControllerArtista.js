@@ -42,15 +42,26 @@ const getListadoArtistas = async (req, res) => {
 const postArtista = async (req, res) => {
 	try {
 		const resultado = await serviceArtista.postArtista(req.body);
-
 		const hayResultado = resultado.artista !== null;
-
 		res.status(200).json(respuestaExitosa('Artista cargado Exitosamente', resultado, null, hayResultado));
 	} catch (error) {
 		console.error('Error al Crear el Artista:', error.message);
-		const codigo = error.codigo || 500;
+		const codigo = error.code || 500;
 		res.status(codigo).json(respuestaError(error.message, error.detail || null));
 	}
 };
 
-export { getColeccionArtista, getListadoArtistas, postArtista };
+const deleteArtista = async (req, res) => {
+	try {
+		const { idArtista } = req.params;
+		const resultado = await serviceArtista.deleteArtista(idArtista);
+		res.status(200).json(respuestaExitosa('Artista eliminado correctamente.', resultado, null, null));
+	} catch (error) {
+		const codigo = error.code || 500;
+		if (codigo >= 599) {
+			res.status(500).json(respuestaError(error.message, error.detail || null));
+		}
+		res.status(codigo).json(respuestaError(error.message, error.detail || null));
+	}
+};
+export { deleteArtista, getColeccionArtista, getListadoArtistas, postArtista };

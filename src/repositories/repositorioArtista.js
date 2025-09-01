@@ -33,15 +33,15 @@ const getTodosLosArtistas = async (offset, limite) => {
 
 //para verificar si existe un artista
 const getArtistaPorNombre = async (nombre) => {
-	const query = `SELECT * FROM principalMakers WHERE LOWER(name) LIKE $1 || '%' LIMIT 1`;
+	const query = `SELECT * FROM principalMakers WHERE LOWER(TRIM(name)) = LOWER(TRIM($1)) LIMIT 1`;
 	const { rows } = await pool.query(query, [nombre]);
 	return rows[0] || null;
 };
 
 const getArtistaPorId = async (id) => {
-	const query = 'SELECT * FROM principalMakers WHERE "IdPrincipalMaker" = $1';
+	const query = 'SELECT * FROM principalMakers WHERE idprincipalmaker = $1';
 	const { rows } = await pool.query(query, [id]);
-	return rows[0];
+	return rows[0] || null;
 };
 
 const postArtista = async (artistaData) => {
@@ -77,7 +77,9 @@ const putArtista = async (id, artistaData) => {
 };
 
 const deleteArtista = async (id) => {
-	return await pool.query('DELETE FROM principalMakers WHERE IdPrincipalMaker = $1 RETURNING *', [id]);
+	const consulta = 'DELETE FROM principalMakers WHERE IdPrincipalMaker = $1 RETURNING *';
+	const { rows } = await pool.query(consulta, [id]);
+	return rows[0] || null;
 };
 
 export {

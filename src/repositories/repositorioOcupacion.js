@@ -87,10 +87,14 @@ const deleteOcupacionDeArtista = async (idArtista, idOcupacion) => {
 		idOcupacion
 	]);
 };
+const eliminarRelacionesOcupaciones = async (idArtista) => {
+	await pool.query(`DELETE FROM makersOccupations WHERE "idprincipalmaker" = $1`, [idArtista]);
+};
 
 export {
 	deleteOcupacion,
 	deleteOcupacionDeArtista,
+	eliminarRelacionesOcupaciones,
 	getOcupaciones,
 	getOcupacionesDeArtistaId,
 	getOcupacionPorId,
