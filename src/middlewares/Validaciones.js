@@ -60,4 +60,62 @@ const validarDatosPaginacion = (req, res, next) => {
 	next();
 };
 
-export { validarDatosPaginacion, validarIdParam, validarNombreOcupacion, validarQueryString };
+//Validar id ocupaciones
+const validarOcupacion = (req, res, next) => {
+	const { occupations } = req.body;
+
+	if (!Array.isArray(occupations)) {
+		return res.status(400).json({
+			error: "El valor 'occupations' debe ser un array de IDs numéricos."
+		});
+	}
+
+	// Verificar que todos los elementos sean números
+	const valoresInvalidos = occupations.filter((o) => typeof o !== 'number');
+	if (valoresInvalidos.length > 0) {
+		return res.status(400).json({
+			error: `Ocupaciones inválidas. Solo se aceptan IDs de ocupación.`,
+			detalles: valoresInvalidos
+		});
+	}
+
+	next();
+};
+
+const validarDatosArtistas = (req, res, next) => {
+	const { name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality } = req.body;
+	// Validación de combreos obligatorios
+	const valoresRequeridos = [
+		{ valor: name, nombre: 'name' },
+		{ valor: placeOfBirth, nombre: 'placeOfBirth' },
+		{ valor: placeOfDeath, nombre: 'placeOfDeath' },
+		{ valor: nationality, nombre: 'nationality' }
+	];
+	for (const { valor, nombre } of valoresRequeridos) {
+		if (!valor || valor.toString().trim() === '') {
+			return res.status(400).json({ error: `El campo ${nombre} es obligatorio` });
+		}
+	}
+
+	const fechas = [
+		{ valor: dateOfBirth, nombre: 'dateOfBirth' },
+		{ valor: dateOfDeath, nombre: 'dateOfDeath' }
+	];
+
+	for (const { valor, nombre } of fechas) {
+		if (valor && isNaN(Date.parse(valor))) {
+			return res.status(400).json({ error: `Formato inválido en '${nombre}'.` });
+		}
+	}
+
+	next();
+};
+
+export {
+	validarDatosArtistas,
+	validarDatosPaginacion,
+	validarIdParam,
+	validarNombreOcupacion,
+	validarOcupacion,
+	validarQueryString
+};

@@ -1,30 +1,41 @@
 import { RecursoExistenteError } from '../errors/recursoExistenteError.js';
 import { RecursoNoEncontradoError } from '../errors/recursoNoEncontradoError.js';
 import * as repositorioArtista from '../repositories/repositorioArtista.js';
+import * as repositorioArtistaOcupacion from '../repositories/repositorioArtistaOcupacion.js';
 import * as repositorioColeccion from '../repositories/repositorioColeccion.js';
 import * as repositorioObras from '../repositories/repositorioObra.js';
 import * as repositorioOcupacion from '../repositories/repositorioOcupacion.js';
-import * as serviceOcupacion from '../services/serviceOcupacion.js';
 import { calcularPaginacion, getPaginacion } from '../utils/paginacion.js';
 
-const postArtista = async (artistaData) => {
-	const { name, occupations = [] } = artistaData;
-	const existe = await repositorioArtista.getArtistaPorNombre(name);
+const postArtista = async ({ occupations, datosArtista }) => {
+	const existe = await repositorioArtista.getArtistaPorNombre(datosArtista.name);
 
 	if (existe) {
 		throw new RecursoExistenteError(
-			`El artista ${artistaData.name} ya existe.`,
-			`Intento de duplicar un registro con nombre: ${artistaData.name}`
+			`El artista ${datosArtista.name} ya existe.`,
+			`Intento de duplicar un registro con nombre: ${datosArtista.name}`
 		);
 	}
-	const artista = await repositorioArtista.postArtista(artistaData);
 
-	for (const nombreOcupacion of occupations) {
-		const ocupacion = await serviceOcupacion.postOcupacion(nombreOcupacion);
-		await repositorioOcupacion.putOcupacionArtista(artista.idPrincipalMaker, ocupacion.idOccupation);
+	if (occupations.length > 0) {
+		const ocupacionesValidadas = await repositorioOcupacion.getOcupacionesPorIds(occupations);
+		if (ocupacionesValidadas.length !== occupations.length) {
+			throw new RecursoNoEncontradoError(
+				`La ocupación con ID ${occupations} no existe.`,
+				`Registro con ID ${occupations} : no encontrado`
+			);
+		}
 	}
-	return artista;
+	const artista = await repositorioArtista.postArtista(datosArtista);
+
+	for (const idOcupacion of occupations) {
+		await repositorioArtistaOcupacion.asignarOcupacionArtista(artista.idPrincipalMaker, idOcupacion);
+	}
+	const ocupacionesAsignadas = await repoOcupacion.getOcupacionesPorArtista(artista.idPrincipalMaker);
+	return { ...artista, occupations: ocupacionesAsignadas };
 };
+
+const putArtista = async (artistaData) => {};
 
 const getObrasArtista = async (nombre, pagina = 1, limite = 20) => {
 	const artista = await repositorioArtista.getArtistaPorNombre(nombre);
@@ -35,14 +46,14 @@ const getObrasArtista = async (nombre, pagina = 1, limite = 20) => {
 	}
 
 	return getPaginacion(
-		() => repositorioObras.getCantidadObras2(artista.idprincipalmaker),
+		() => repositorioObras.getTotalObrasArtista(artista.idprincipalmaker),
 		(offset, limit) => repositorioColeccion.getColeccionObrasArtista(offset, limit, artista.idprincipalmaker),
 		pagina,
 		limite
 	);
 };
 
-const getListadoDeArtistas = async (pagina = 1, limite = 20) => {
+const getTodosLosArtistas = async (pagina = 1, limite = 20) => {
 	return getPaginacion(
 		() => repositorioArtista.getCantidadArtistas(),
 		(offset, limit) => repositorioArtista.getTodosLosArtistas(offset, limit),
@@ -56,9 +67,9 @@ const deleteArtista = async (id) => {
 	if (!existe) {
 		throw new RecursoNoEncontradoError(`El artista ${id} no existe.`, `No hay registro del artista con id: ${id}`);
 	}
-	await repositorioOcupacion.eliminarRelacionesOcupaciones(id);
+	await repositorioArtistaOcupacion.eliminarRelacionOcupacionArt(id);
 	const artistaEliminado = await repositorioArtista.deleteArtista(id);
 	return artistaEliminado;
 };
 
-export { deleteArtista, getListadoDeArtistas, getObrasArtista, postArtista };
+export { deleteArtista, getObrasArtista, getTodosLosArtistas, postArtista, putArtista };

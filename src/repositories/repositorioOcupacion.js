@@ -12,6 +12,18 @@ const getOcupacionPorId = async (id) => {
 	const { rows } = await pool.query(query, [id]);
 	return rows[0];
 };
+const getOcupacionesPorIds = async (ids = []) => {
+	if (ids.length === 0) return [];
+
+	const { rows } = await pool.query(
+		`SELECT idOccupation, name 
+     FROM occupations 
+     WHERE idOccupation = ANY($1)`,
+		[ids]
+	);
+
+	return rows;
+};
 const getOcupacionPorNombre = async (nombreOcupacion) => {
 	const query = `SELECT * FROM occupations WHERE name = $1`;
 	const { rows } = await pool.query(query, [nombreOcupacion]);
@@ -47,25 +59,6 @@ const putOcupacion = async (id, nombre) => {
 	const { rows } = await pool.query(query, values);
 	return rows[0];
 };
-// Verifica si una ocupación ya está asignada a un artista (retorna TRUE O FALSE)
-const ocupacionAsignadaAArtista = async (idArtista, idOcupacion) => {
-	const query = `
-		SELECT * FROM makersOccupations 
-		WHERE IdPrincipalMaker = $1 AND IdOccupation = $2
-	`;
-	const { rows } = await pool.query(query, [idArtista, idOcupacion]);
-	return rows.length > 0;
-};
-//Relacionar el artista con la ocupación
-const putOcupacionArtista = async (idArtista, idOcupacion) => {
-	const query = `
-    INSERT INTO makersOccupations (IdPrincipalMaker, IdOccupation)
-    VALUES ($1, $2) ON CONFLICT DO NOTHING;
-  `;
-	const { rows } = await pool.query(query, [idArtista, idOcupacion]);
-	console.log(rows[0]);
-	return rows[0];
-};
 
 const deleteOcupacion = async (idOcupacion) => {
 	try {
@@ -81,27 +74,14 @@ const deleteOcupacion = async (idOcupacion) => {
 	}
 };
 
-const deleteOcupacionDeArtista = async (idArtista, idOcupacion) => {
-	return await pool.query(`DELETE FROM makersOccupations WHERE IdPrincipalMaker = $1 AND IdOccupation = $2`, [
-		idArtista,
-		idOcupacion
-	]);
-};
-const eliminarRelacionesOcupaciones = async (idArtista) => {
-	await pool.query(`DELETE FROM makersOccupations WHERE "idprincipalmaker" = $1`, [idArtista]);
-};
-
 export {
 	deleteOcupacion,
-	deleteOcupacionDeArtista,
-	eliminarRelacionesOcupaciones,
 	getOcupaciones,
 	getOcupacionesDeArtistaId,
+	getOcupacionesPorIds,
 	getOcupacionPorId,
 	getOcupacionPorNombre,
-	ocupacionAsignadaAArtista,
 	postOcupacion,
 	putOcupacion,
-	putOcupacionArtista,
 	verificarOcupacionAlActualizar
 };

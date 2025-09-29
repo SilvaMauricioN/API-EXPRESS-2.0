@@ -38,11 +38,10 @@ const postOcupacion = async (req, res) => {
 		const nuevaOcupacion = await serviceOcupacion.postOcupacion(name);
 		res.status(201).json(respuestaExitosa('Ocupación creada correctamente.', nuevaOcupacion, null, true));
 	} catch (error) {
-		if (error.tipo === 'duplicado') {
-			return res.status(409).json(respuestaError('Ya existe una ocupación con ese nombre.'));
-		}
+		const codigo = error.code || 500;
+
 		console.error('Error al crear ocupación:', error);
-		res.status(500).json(respuestaError('Error al crear ocupación.', error.message));
+		res.status(codigo).json(respuestaError(error.message, error.detail || null));
 	}
 };
 //actualiza ocupacion, id ocupacion name a actualizar
@@ -55,8 +54,10 @@ const putOcupacion = async (req, res) => {
 
 		res.json(respuestaExitosa('Ocupación actualizada correctamente.', ocupacionActualizada, null, true));
 	} catch (error) {
-		console.error('Error al actualizar ocupación:', error);
-		res.status(500).json(respuestaError('Error al actualizar ocupación.', error.message));
+		const codigo = error.code || 500;
+
+		console.error('Error al actualizar la  ocupación:', error);
+		res.status(codigo).json(respuestaError(error.message, error.detail || null));
 	}
 };
 

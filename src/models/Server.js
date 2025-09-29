@@ -17,7 +17,7 @@ export default class Server {
 		this.app.use(express.json());
 	}
 	routers() {
-		this.app.use('/api/museorijks/coleccion', coleccionRoutes);
+		this.app.use('/api/museorijks/coleccion', coleccionRoutes); // todas las obras
 		this.app.use('/api/museorijks', artistaRoutes);
 		this.app.use('/api/museorijks/coleccion', obrasRoutes);
 		this.app.use('/api/museorijks', ocupacionRoutes);

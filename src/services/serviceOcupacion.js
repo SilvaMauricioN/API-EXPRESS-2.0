@@ -1,3 +1,5 @@
+import { RecursoExistenteError } from '../errors/recursoExistenteError.js';
+import { RecursoNoEncontradoError } from '../errors/recursoNoEncontradoError.js';
 import * as repositorioOcupacion from '../repositories/repositorioOcupacion.js';
 
 const getOcupaciones = async () => {
@@ -11,20 +13,30 @@ const getOcupacionesDeArtistaId = async (idArtista) => {
 
 const postOcupacion = async (name) => {
 	let ocupacion = await repositorioOcupacion.getOcupacionPorNombre(name);
-	if (!ocupacion) {
-		ocupacion = await repositorioOcupacion.postOcupacion(name);
+	if (ocupacion) {
+		throw new RecursoExistenteError(`Ya existe la ocupación '${name}'`);
 	}
-	return ocupacion;
+	return await repositorioOcupacion.postOcupacion(name);
 };
 
 const putOcupacion = async (idOcupacion, nombreOcupacion) => {
 	const existeOcupacion = await repositorioOcupacion.getOcupacionPorId(idOcupacion);
 	if (!existeOcupacion) {
-		throw new Error('La ocupación no existe.');
+		throw new RecursoNoEncontradoError(
+			`La ocupación ${nombreOcupacion} no existe`,
+			`No se encuentra la ocupación con ID: ${idOcupacion}`
+		);
 	}
+	if (existeOcupacion.name == nombreOcupacion) {
+		return { ...existeOcupacion, unchanged: true };
+	}
+	//verifico si existe la misma ocupación pero con diferente id
 	const igualOcupacion = await repositorioOcupacion.verificarOcupacionAlActualizar(idOcupacion, nombreOcupacion);
 	if (igualOcupacion) {
-		throw new Error('Ya existe otra ocupación con ese nombre.');
+		throw new RecursoExistenteError(
+			`La ocupacíon ${nombreOcupacion} ya existe`,
+			`Intento de duplicar un registro con nombre: ${nombreOcupacion}`
+		);
 	}
 	return await repositorioOcupacion.putOcupacion(idOcupacion, nombreOcupacion);
 };

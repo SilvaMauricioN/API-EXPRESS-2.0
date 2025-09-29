@@ -105,11 +105,12 @@ const getCantidadObras = async (artista = null) => {
 	return parseInt(resultadoTotal.rows[0].count);
 };
 
-const getCantidadObras2 = async (idArtista) => {
+// Funcion para obtener el TOTAL de resultados
+const getTotalObrasArtista = async (idArtista) => {
 	const query = `SELECT COUNT(*)::int AS total FROM artObjects ao
 			JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker WHERE pm.IdPrincipalMaker = $1`;
 	const { rows } = await pool.query(query, [idArtista]);
 	return rows[0].total;
 };
 
-export { getCantidadObras, getCantidadObras2, getObraNumeroObjeto };
+export { getCantidadObras, getObraNumeroObjeto, getTotalObrasArtista };
