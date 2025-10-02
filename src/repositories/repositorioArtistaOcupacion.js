@@ -6,9 +6,14 @@ const asignarOcupacionArtista = async (idArtista, idOcupacion) => {
     INSERT INTO makersOccupations (IdPrincipalMaker, IdOccupation)
     VALUES ($1, $2) ON CONFLICT DO NOTHING;
   `;
-	const { rows } = await pool.query(query, [idArtista, idOcupacion]);
-	console.log(rows[0]);
-	return rows[0];
+	const resultado = await pool.query(query, [idArtista, idOcupacion]);
+
+	if (resultado.rowCount > 0) {
+		console.log('Inserción exitosa (se agregó una nueva fila).', resultado.rowCount);
+	} else {
+		console.log('Inserción omitida (hubo conflicto o no se agregó nada).', resultado.rowCount);
+	}
+	return resultado.rowCount;
 };
 
 const eliminarRelacionOcupacionArt = async (idArtista) => {

@@ -1,4 +1,4 @@
-const calcularPaginacion = (total, pagina, limite) => {
+const calcularPaginacion = (total, pagina = 1, limite = 10) => {
 	const totalPaginas = total > 0 ? Math.ceil(total / limite) : 0;
 	return {
 		resultadoTotal: total,
@@ -10,18 +10,17 @@ const calcularPaginacion = (total, pagina, limite) => {
 
 const getPaginacion = async (getCantidadFun, getDatosPaginadosFun, page = 1, limit = 20) => {
 	const cantidad = await getCantidadFun();
-	const hayResultado = cantidad > 0;
 
-	if (!hayResultado) {
+	if (cantidad === 0) {
 		const paginacion = calcularPaginacion(cantidad, page, limit);
-		return { hayResultado, datos: [], paginacion };
+		return { datos: [], paginacion };
 	}
 
 	const offset = (page - 1) * limit;
 	const datos = await getDatosPaginadosFun(offset, limit);
 	const paginacion = calcularPaginacion(cantidad, page, limit);
 
-	return { hayResultado, datos, paginacion };
+	return { datos, paginacion };
 };
 
 export { calcularPaginacion, getPaginacion };

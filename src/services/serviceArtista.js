@@ -5,11 +5,10 @@ import * as repositorioArtistaOcupacion from '../repositories/repositorioArtista
 import * as repositorioColeccion from '../repositories/repositorioColeccion.js';
 import * as repositorioObras from '../repositories/repositorioObra.js';
 import * as repositorioOcupacion from '../repositories/repositorioOcupacion.js';
-import { calcularPaginacion, getPaginacion } from '../utils/paginacion.js';
+import { getPaginacion } from '../utils/paginacion.js';
 
 const postArtista = async ({ occupations, datosArtista }) => {
 	const existe = await repositorioArtista.getArtistaPorNombre(datosArtista.name);
-
 	if (existe) {
 		throw new RecursoExistenteError(
 			`El artista ${datosArtista.name} ya existe.`,
@@ -29,37 +28,66 @@ const postArtista = async ({ occupations, datosArtista }) => {
 	const artista = await repositorioArtista.postArtista(datosArtista);
 
 	for (const idOcupacion of occupations) {
-		await repositorioArtistaOcupacion.asignarOcupacionArtista(artista.idPrincipalMaker, idOcupacion);
+		await repositorioArtistaOcupacion.asignarOcupacionArtista(artista.idprincipalmaker, idOcupacion);
 	}
-	const ocupacionesAsignadas = await repoOcupacion.getOcupacionesPorArtista(artista.idPrincipalMaker);
+	const ocupacionesAsignadas = await repositorioOcupacion.getOcupacionesDeArtistaId(artista.idprincipalmaker);
 	return { ...artista, occupations: ocupacionesAsignadas };
 };
 
-const putArtista = async (artistaData) => {};
-
+const putArtista = async (idArtista, datosArtista) => {
+	const { occupations } = datosArtista;
+	const existe = await repositorioArtista.getArtistaPorId(idArtista);
+	if (!existe) {
+		throw new RecursoNoEncontradoError(`Artista: ${idArtista}`, 'El artista solicitado no existe.');
+	}
+	//existen las ocupaciones
+	if (occupations.length > 0) {
+		const ocupacionesValidadas = await repositorioOcupacion.getOcupacionesPorIds(occupations);
+		if (ocupacionesValidadas.length !== occupations.length) {
+			throw new RecursoNoEncontradoError(
+				`La ocupación con ID ${occupations} no existe.`,
+				`Registro con ID ${occupations} : no encontrado`
+			);
+		}
+	}
+	const artista = await repositorioArtista.putArtista(idArtista, datosArtista);
+	await repositorioArtistaOcupacion.eliminarRelacionOcupacionArt(idArtista);
+	//asignar nuevas ocupaciones a artista
+	for (const idOcupacion of occupations) {
+		await repositorioArtistaOcupacion.asignarOcupacionArtista(artista.idprincipalmaker, idOcupacion);
+	}
+	const ocupacionesAsignadas = await repositorioOcupacion.getOcupacionesDeArtistaId(idArtista);
+	return { ...artista, occupations: ocupacionesAsignadas };
+};
+//
 const getObrasArtista = async (nombre, pagina = 1, limite = 20) => {
 	const artista = await repositorioArtista.getArtistaPorNombre(nombre);
-
 	if (!artista) {
-		const paginacion = calcularPaginacion(0, pagina, limite);
-		return { hayResultado: false, obras: [], paginacion };
+		throw new RecursoNoEncontradoError(`Artista: ${nombre}`, 'El artista solicitado no existe.');
 	}
-
 	return getPaginacion(
 		() => repositorioObras.getTotalObrasArtista(artista.idprincipalmaker),
-		(offset, limit) => repositorioColeccion.getColeccionObrasArtista(offset, limit, artista.idprincipalmaker),
+		(offset, limit) => repositorioColeccion.getObrasArtista(offset, limit, artista.idprincipalmaker),
 		pagina,
 		limite
 	);
 };
 
-const getTodosLosArtistas = async (pagina = 1, limite = 20) => {
+const getArtistas = async (pagina = 1, limite = 20) => {
 	return getPaginacion(
 		() => repositorioArtista.getCantidadArtistas(),
-		(offset, limit) => repositorioArtista.getTodosLosArtistas(offset, limit),
+		(offset, limit) => repositorioArtista.getArtistas(offset, limit),
 		pagina,
 		limite
 	);
+};
+
+const getArtistaPorId = async (idArtista) => {
+	const artista = await repositorioArtista.getArtistaPorId(idArtista);
+	if (!artista) {
+		throw new RecursoNoEncontradoError(`Artista: ${idArtista}`, 'El artista solicitado no existe.');
+	}
+	return artista;
 };
 
 const deleteArtista = async (id) => {
@@ -72,4 +100,4 @@ const deleteArtista = async (id) => {
 	return artistaEliminado;
 };
 
-export { deleteArtista, getObrasArtista, getTodosLosArtistas, postArtista, putArtista };
+export { deleteArtista, getArtistaPorId, getArtistas, getObrasArtista, postArtista, putArtista };

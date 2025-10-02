@@ -25,7 +25,7 @@ const getColeccionObras = async (offset, limite) => {
 	return data.rows;
 };
 
-const getColeccionObrasArtista = async (offset, limite, artistaId) => {
+const getObrasArtista = async (offset, limite, artistaId) => {
 	const safeOffset = offset < 0 ? 0 : offset;
 	const consulta = `
             SELECT 
@@ -52,4 +52,4 @@ const getColeccionObrasArtista = async (offset, limite, artistaId) => {
 	return data.rows;
 };
 
-export { getColeccionObras, getColeccionObrasArtista };
+export { getColeccionObras, getObrasArtista };

@@ -105,7 +105,7 @@ const getCantidadObras = async (artista = null) => {
 	return parseInt(resultadoTotal.rows[0].count);
 };
 
-// Funcion para obtener el TOTAL de resultados
+// Funcion para obtener el numero de obras de un artista
 const getTotalObrasArtista = async (idArtista) => {
 	const query = `SELECT COUNT(*)::int AS total FROM artObjects ao
 			JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker WHERE pm.IdPrincipalMaker = $1`;

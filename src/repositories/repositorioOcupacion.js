@@ -12,6 +12,7 @@ const getOcupacionPorId = async (id) => {
 	const { rows } = await pool.query(query, [id]);
 	return rows[0];
 };
+//buscar coincidencias en una lista .SELECT idOccupation, name FROM occupations WHERE idOccupation = 10 OR idOccupation = 25 OR idOccupation = 42
 const getOcupacionesPorIds = async (ids = []) => {
 	if (ids.length === 0) return [];
 

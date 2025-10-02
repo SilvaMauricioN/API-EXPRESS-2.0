@@ -20,6 +20,29 @@ const respuestaExitosa = (mensaje, data = [], paginacion = null, hayResultado = 
 	return respuesta;
 };
 
+const formatoRespuestaUnico = (data, mensaje = 'Operación exitosa') => {
+	return {
+		status: 'success',
+		mensaje: mensaje,
+		data: data || null
+	};
+};
+
+const formatoRespuestaColeccion = (data, paginacion = null, mensaje = 'Datos obtenidos exitosamente') => {
+	const respuesta = {
+		status: 'success',
+		message: mensaje
+	};
+
+	if (paginacion) {
+		// Usamos 'pagination' para seguir convenciones API
+		respuesta.paginacion = paginacion;
+	}
+	respuesta.data = data;
+
+	return respuesta;
+};
+
 const respuestaError = (mensaje, detalle = null) => {
 	const respuesta = {
 		status: 'error',
@@ -33,4 +56,4 @@ const respuestaError = (mensaje, detalle = null) => {
 	return respuesta;
 };
 
-export { respuestaError, respuestaExitosa };
+export { formatoRespuestaColeccion, formatoRespuestaUnico, respuestaError, respuestaExitosa };

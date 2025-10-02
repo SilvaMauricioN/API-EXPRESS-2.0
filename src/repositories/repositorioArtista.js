@@ -6,10 +6,11 @@ const getCantidadArtistas = async () => {
 	return rows[0].total;
 };
 
-const getTodosLosArtistas = async (offset, limite) => {
+const getArtistas = async (offset, limite) => {
 	const safeOffset = offset < 0 ? 0 : offset;
 	const consulta = `
             SELECT
+								pm.idprincipalmaker,
                 pm.name,
                 pm.placeofBirth,
                 pm.dateofBirth,
@@ -37,9 +38,39 @@ const getArtistaPorNombre = async (nombre) => {
 	return rows[0] || null;
 };
 
-const getArtistaPorId = async (id) => {
-	const query = 'SELECT * FROM principalMakers WHERE idprincipalmaker = $1';
-	const { rows } = await pool.query(query, [id]);
+// const getArtistaPorId = async (id) => {
+// 	const query = 'SELECT * FROM principalMakers WHERE idprincipalmaker = $1';
+// 	const { rows } = await pool.query(query, [id]);
+// 	return rows[0] || null;
+// };
+
+const getArtistaPorId = async (idArtista) => {
+	const consulta = `
+							SELECT
+									pm.idPrincipalMaker,
+									pm.name,
+									pm.placeOfBirth,
+									pm.dateOfBirth,
+									pm.dateOfDeath,
+									pm.placeOfDeath,
+									pm.nationality,
+									json_agg(
+											json_build_object(
+													'idOccupation', o.idOccupation,
+													'name', o.name
+											)
+									) AS occupations
+								FROM
+										principalMakers pm
+								LEFT JOIN
+										makersOccupations mo ON pm.idPrincipalMaker = mo.idPrincipalMaker
+								LEFT JOIN
+										occupations o ON mo.idOccupation = o.idOccupation
+								WHERE
+										pm.idPrincipalMaker = $1
+								GROUP BY
+										pm.idPrincipalMaker, pm.name, pm.placeOfBirth, pm.dateOfBirth, pm.dateOfDeath, pm.placeOfDeath, pm.nationality;`;
+	const { rows } = await pool.query(consulta, [idArtista]);
 	return rows[0] || null;
 };
 
@@ -85,8 +116,8 @@ export {
 	deleteArtista,
 	getArtistaPorId,
 	getArtistaPorNombre,
+	getArtistas,
 	getCantidadArtistas,
-	getTodosLosArtistas,
 	postArtista,
 	putArtista
 };

@@ -1,82 +1,93 @@
-// import { putArtista } from '../repositories/repositorioArtista.js';
+import { handleCustomError } from '../middlewares/errorHandler.js';
 import * as serviceArtista from '../services/serviceArtista.js';
-import { respuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
-
+import {
+	formatoRespuestaColeccion,
+	formatoRespuestaUnico,
+	respuestaError,
+	respuestaExitosa
+} from '../utils/respuestaApi.js';
 //GET retorna todas las obras de un artista especifico
-const getColeccionArtista = async (req, res) => {
+const getObrasArtista = async (req, res, next) => {
 	try {
 		const nombre = req.query.nombre;
 		const pagina = req.query.pagina;
 		const limite = req.query.limite;
 
-		const { hayResultado, datos, paginacion } = await serviceArtista.getObrasArtista(nombre, pagina, limite);
-		const mensaje = hayResultado
-			? 'Colección de obras de arte recuperada exitosamente.'
-			: `El artista '${nombre}' no existe en la base de datos.`;
-
-		res.status(200).json(respuestaExitosa(mensaje, datos, paginacion, hayResultado));
+		const { datos, paginacion } = await serviceArtista.getObrasArtista(nombre, pagina, limite);
+		const mensaje = 'Colección de obras de arte recuperada exitosamente.';
+		res.status(200).json(formatoRespuestaColeccion(datos, paginacion, mensaje));
 	} catch (error) {
 		console.error('Error al obtener las obras:', error.message);
-		res.status(500).json(respuestaError('Error interno del servidor al obtener obras.', error.message));
+		next(error);
 	}
 };
 
 //GET Retorna todos los artistas y especificaciones
-const getTodosLosArtistas = async (req, res) => {
+const getArtistas = async (req, res, next) => {
 	try {
 		const pagina = req.query.pagina;
 		const limite = req.query.limite;
 
-		const { hayResultado, datos, paginacion } = await serviceArtista.getTodosLosArtistas(pagina, limite);
+		const { datos, paginacion } = await serviceArtista.getArtistas(pagina, limite);
+		const mensaje = 'Listado de Autores recuperado Exitosamente.';
 
-		const mensaje = hayResultado ? 'Listado de Autores recuperado Exitosamente.' : `No se encontro listado de Autores.`;
-
-		res.status(200).json(respuestaExitosa(mensaje, datos, paginacion, hayResultado));
+		res.status(200).json(formatoRespuestaColeccion(datos, paginacion, mensaje));
 	} catch (error) {
 		console.error('Error al obtener listado de Autores:', error.message);
-		res.status(500).json(respuestaError('Error interno del servidor al obtener listado de Autores.', error.message));
+		next(error);
 	}
 };
 
+const getArtistaPorId = async (req, res, next) => {
+	try {
+		const artistaId = req.params.idArtista;
+		const artista = await serviceArtista.getArtistaPorId(artistaId);
+		const mensaje = 'Artista recuperado Exitosamente.';
+
+		res.status(200).json(formatoRespuestaUnico(artista, mensaje));
+	} catch (error) {
+		console.error('Error al obtener listado de Autores:', error.message);
+		next(error);
+	}
+};
 //POST Crear un nuevo artista
-const postArtista = async (req, res) => {
+const postArtista = async (req, res, next) => {
 	try {
 		const { occupations, ...datosArtista } = req.body;
 
-		const resultado = await serviceArtista.postArtista({ occupations, datosArtista });
-		const hayResultado = resultado.artista !== null;
-		res.status(201).json(respuestaExitosa('Artista cargado Exitosamente', resultado, null, hayResultado));
+		const artista = await serviceArtista.postArtista({ occupations, datosArtista });
+		const mensaje = 'Artista cargado Exitosamente';
+		res.status(201).json(formatoRespuestaUnico(artista, mensaje));
 	} catch (error) {
 		console.error('Error al Crear el Artista:', error.message);
-		const codigo = error.code || 500;
-		res.status(codigo).json(respuestaError(error.message, error.detail || null));
+		next(error);
 	}
 };
 
 //PUT Modifica las especificaciones de unb artista
-const putArtista = async (req, res) => {
+const putArtista = async (req, res, next) => {
 	try {
-		const resultado = await serviceArtista.putArtista(req.body);
-		const hayResultado = resultado.artista !== null;
-		res.status(200).json(respuestaExitosa('Artista cargado Exitosamente', resultado, null, hayResultado));
+		const artistaId = req.params.idArtista;
+		const { ...datosArtista } = req.body;
+
+		const artistaActualizado = await serviceArtista.putArtista(artistaId, datosArtista);
+		const mensaje = 'artista actualizado Correctamente';
+		res.status(200).json(formatoRespuestaUnico(artistaActualizado, mensaje));
 	} catch (error) {
-		console.error('Error al Crear el Artista:', error.message);
-		const codigo = error.code || 500;
-		res.status(codigo).json(respuestaError(error.message, error.detail || null));
+		console.error('Error al Actualizar el Artista:', error.message);
+		next(error);
 	}
 };
 
-const deleteArtista = async (req, res) => {
+const deleteArtista = async (req, res, next) => {
 	try {
 		const { idArtista } = req.params;
-		const resultado = await serviceArtista.deleteArtista(idArtista);
-		res.status(200).json(respuestaExitosa('Artista eliminado correctamente.', resultado, null, null));
+		const artistaEliminado = await serviceArtista.deleteArtista(idArtista);
+		const mensaje = 'Artista eliminado correctamente.';
+		res.status(200).json(formatoRespuestaUnico(artistaEliminado, mensaje));
 	} catch (error) {
-		const codigo = error.code || 500;
-		if (codigo >= 599) {
-			res.status(500).json(respuestaError(error.message, error.detail || null));
-		}
-		res.status(codigo).json(respuestaError(error.message, error.detail || null));
+		console.log('Error al eliminar el Artista:', error.message);
+		next(error);
 	}
 };
-export { deleteArtista, getColeccionArtista, getTodosLosArtistas, postArtista, putArtista };
+export { deleteArtista, getArtistaPorId, getArtistas, getObrasArtista, postArtista, putArtista };

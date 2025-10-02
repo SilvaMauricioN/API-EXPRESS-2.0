@@ -1,4 +1,5 @@
 import express from 'express';
+import { handleCustomError } from '../middlewares/errorHandler.js';
 import artistaRoutes from '../routes/RoutesArtista.js';
 import coleccionRoutes from '../routes/RoutesColeccion.js';
 import obrasRoutes from '../routes/RoutesObras.js';
@@ -11,6 +12,7 @@ export default class Server {
 		this.app.disable('x-powered-by');
 		this.middleware();
 		this.routers();
+		this.errorMiddleware();
 	}
 	middleware() {
 		this.app.use(express.static('Public'));
@@ -29,6 +31,12 @@ export default class Server {
 			});
 		});
 	}
+	errorMiddleware() {
+		this.app.use((err, req, res, next) => {
+			handleCustomError(res, err);
+		});
+	}
+
 	listen() {
 		this.app.listen(this.port, () => {
 			console.log(`Escuchando en el puerto http://localhost:${this.port}`);
