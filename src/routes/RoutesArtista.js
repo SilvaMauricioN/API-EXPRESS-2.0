@@ -20,12 +20,12 @@ const ruta = Router();
 ruta.get('/coleccion/artista', validarQueryString('nombre'), validarDatosPaginacion, getObrasArtista);
 //todos los artistas y sus especificaciones
 ruta.get('/artistas', validarDatosPaginacion, getArtistas);
+//get artista por id
 ruta.get('/artista/:idArtista', validarIdParam('idArtista'), getArtistaPorId);
 
 //crear un nuevo artista
 ruta.post('/artista', validarDatosArtistas, validarOcupacion, postArtista);
 ruta.put('/artista/:idArtista', validarIdParam('idArtista'), validarDatosArtistas, validarOcupacion, putArtista);
-
 ruta.delete('/artista/:idArtista', validarIdParam('idArtista'), deleteArtista);
 
 export default ruta;

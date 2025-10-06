@@ -17,7 +17,6 @@ const getObrasArtista = async (req, res, next) => {
 		const mensaje = 'Colección de obras de arte recuperada exitosamente.';
 		res.status(200).json(formatoRespuestaColeccion(datos, paginacion, mensaje));
 	} catch (error) {
-		console.error('Error al obtener las obras:', error.message);
 		next(error);
 	}
 };
@@ -33,20 +32,18 @@ const getArtistas = async (req, res, next) => {
 
 		res.status(200).json(formatoRespuestaColeccion(datos, paginacion, mensaje));
 	} catch (error) {
-		console.error('Error al obtener listado de Autores:', error.message);
 		next(error);
 	}
 };
 
 const getArtistaPorId = async (req, res, next) => {
 	try {
-		const artistaId = req.params.idArtista;
-		const artista = await serviceArtista.getArtistaPorId(artistaId);
+		const { idArtista } = req.params;
+		const artista = await serviceArtista.getArtistaPorId(idArtista);
 		const mensaje = 'Artista recuperado Exitosamente.';
 
 		res.status(200).json(formatoRespuestaUnico(artista, mensaje));
 	} catch (error) {
-		console.error('Error al obtener listado de Autores:', error.message);
 		next(error);
 	}
 };
@@ -59,22 +56,19 @@ const postArtista = async (req, res, next) => {
 		const mensaje = 'Artista cargado Exitosamente';
 		res.status(201).json(formatoRespuestaUnico(artista, mensaje));
 	} catch (error) {
-		console.error('Error al Crear el Artista:', error.message);
 		next(error);
 	}
 };
-
 //PUT Modifica las especificaciones de unb artista
 const putArtista = async (req, res, next) => {
 	try {
-		const artistaId = req.params.idArtista;
+		const { idArtista } = req.params;
 		const { ...datosArtista } = req.body;
 
-		const artistaActualizado = await serviceArtista.putArtista(artistaId, datosArtista);
+		const artistaActualizado = await serviceArtista.putArtista(idArtista, datosArtista);
 		const mensaje = 'artista actualizado Correctamente';
 		res.status(200).json(formatoRespuestaUnico(artistaActualizado, mensaje));
 	} catch (error) {
-		console.error('Error al Actualizar el Artista:', error.message);
 		next(error);
 	}
 };
@@ -86,7 +80,6 @@ const deleteArtista = async (req, res, next) => {
 		const mensaje = 'Artista eliminado correctamente.';
 		res.status(200).json(formatoRespuestaUnico(artistaEliminado, mensaje));
 	} catch (error) {
-		console.log('Error al eliminar el Artista:', error.message);
 		next(error);
 	}
 };

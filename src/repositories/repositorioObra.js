@@ -2,7 +2,7 @@ import { pool } from '../db/conexion.js';
 
 // Funcion para obtener detalles de una obra especifica
 const getObraNumeroObjeto = async (numeroObra) => {
-	const consulta = `
+	const query = `
         SELECT            
             ao.objectNumber,
             ao.title,
@@ -80,17 +80,17 @@ const getObraNumeroObjeto = async (numeroObra) => {
         AND ao.objectNumber = $1;
     `;
 
-	const data = await pool.query(consulta, [numeroObra]);
+	const data = await pool.query(query, [numeroObra]);
 	return data.rows;
 };
 
 // Funcion para obtener el TOTAL de resultados
 const getCantidadObras = async (artista = null) => {
-	let consulta;
+	let query;
 	let valores = [];
 
 	if (artista) {
-		consulta = `
+		query = `
 			SELECT COUNT(*) 
 			FROM artObjects ao
 			JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker
@@ -99,17 +99,17 @@ const getCantidadObras = async (artista = null) => {
 		`;
 		valores = [artista];
 	} else {
-		consulta = `SELECT COUNT(*) FROM artObjects WHERE hasImage = TRUE;`;
+		query = `SELECT COUNT(*) FROM artObjects WHERE hasImage = TRUE;`;
 	}
-	const resultadoTotal = await pool.query(consulta, valores);
+	const resultadoTotal = await pool.query(query, valores);
 	return parseInt(resultadoTotal.rows[0].count);
 };
 
 // Funcion para obtener el numero de obras de un artista
-const getTotalObrasArtista = async (idArtista) => {
+const getTotalObrasArtista = async (artistaId) => {
 	const query = `SELECT COUNT(*)::int AS total FROM artObjects ao
 			JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker WHERE pm.IdPrincipalMaker = $1`;
-	const { rows } = await pool.query(query, [idArtista]);
+	const { rows } = await pool.query(query, [artistaId]);
 	return rows[0].total;
 };
 

@@ -1,7 +1,7 @@
 import { pool } from '../db/conexion.js';
 
 const getColeccionObras = async (offset, limite) => {
-	const consulta = `
+	const query = `
             SELECT 
                 ao.objectNumber,
                 ao.title,
@@ -21,13 +21,13 @@ const getColeccionObras = async (offset, limite) => {
                 OFFSET $1
                 LIMIT $2; `;
 
-	const data = await pool.query(consulta, [offset, limite]);
+	const data = await pool.query(query, [offset, limite]);
 	return data.rows;
 };
 
 const getObrasArtista = async (offset, limite, artistaId) => {
 	const safeOffset = offset < 0 ? 0 : offset;
-	const consulta = `
+	const query = `
             SELECT 
                 ao.objectNumber,
                 ao.title,
@@ -48,7 +48,7 @@ const getObrasArtista = async (offset, limite, artistaId) => {
                 OFFSET $1
                 LIMIT $2; `;
 
-	const data = await pool.query(consulta, [safeOffset, limite, artistaId]);
+	const data = await pool.query(query, [safeOffset, limite, artistaId]);
 	return data.rows;
 };
 

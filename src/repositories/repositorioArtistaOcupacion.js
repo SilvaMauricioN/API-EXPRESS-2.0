@@ -1,40 +1,44 @@
 import { pool } from '../db/conexion.js';
 
 //Relacionar el artista con la ocupación
-const asignarOcupacionArtista = async (idArtista, idOcupacion) => {
+const asignarOcupacionArtista = async (artistaId, ocupacionId) => {
 	const query = `
     INSERT INTO makersOccupations (IdPrincipalMaker, IdOccupation)
     VALUES ($1, $2) ON CONFLICT DO NOTHING;
   `;
-	const resultado = await pool.query(query, [idArtista, idOcupacion]);
-
-	if (resultado.rowCount > 0) {
-		console.log('Inserción exitosa (se agregó una nueva fila).', resultado.rowCount);
-	} else {
-		console.log('Inserción omitida (hubo conflicto o no se agregó nada).', resultado.rowCount);
-	}
+	const resultado = await pool.query(query, [artistaId, ocupacionId]);
 	return resultado.rowCount;
 };
 
-const eliminarRelacionOcupacionArt = async (idArtista) => {
-	await pool.query(`DELETE FROM makersOccupations WHERE "idprincipalmaker" = $1`, [idArtista]);
+const deleteRelacionPorArtistaId = async (artistaId) => {
+	await pool.query(`DELETE FROM makersOccupations WHERE idprincipalmaker = $1`, [artistaId]);
+};
+
+const deleteRelacionPorOcupacionId = async (ocupacionId) => {
+	await pool.query(`DELETE FROM makersOccupations WHERE  IdOccupation = $1`, [ocupacionId]);
 };
 //elimina viculo de una ocupacion y artista 1  sola
-const deleteOcupacionDeArtista = async (idArtista, idOcupacion) => {
+const deleteRelacionEspecifica = async (artistaId, ocupacionId) => {
 	return await pool.query(`DELETE FROM makersOccupations WHERE IdPrincipalMaker = $1 AND IdOccupation = $2`, [
-		idArtista,
-		idOcupacion
+		artistaId,
+		ocupacionId
 	]);
 };
 
 // Verifica si una ocupación ya está asignada a un artista (retorna TRUE O FALSE)
-const ocupacionAsignadaAArtista = async (idArtista, idOcupacion) => {
+const ocupacionAsignadaAArtista = async (artistaId, ocupacionId) => {
 	const query = `
 		SELECT * FROM makersOccupations 
 		WHERE IdPrincipalMaker = $1 AND IdOccupation = $2
 	`;
-	const { rows } = await pool.query(query, [idArtista, idOcupacion]);
+	const { rows } = await pool.query(query, [artistaId, ocupacionId]);
 	return rows.length > 0;
 };
 
-export { asignarOcupacionArtista, eliminarRelacionOcupacionArt };
+export {
+	asignarOcupacionArtista,
+	deleteRelacionEspecifica,
+	deleteRelacionPorArtistaId,
+	deleteRelacionPorOcupacionId,
+	ocupacionAsignadaAArtista
+};

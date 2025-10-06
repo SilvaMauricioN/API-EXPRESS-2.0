@@ -8,7 +8,7 @@ const getCantidadArtistas = async () => {
 
 const getArtistas = async (offset, limite) => {
 	const safeOffset = offset < 0 ? 0 : offset;
-	const consulta = `
+	const query = `
             SELECT
 								pm.idprincipalmaker,
                 pm.name,
@@ -25,10 +25,9 @@ const getArtistas = async (offset, limite) => {
                 ) AS "occupations"                
                 FROM principalMakers pm
 								OFFSET $1
-                LIMIT $2;
-                `;
+                LIMIT $2;`;
 
-	const data = await pool.query(consulta, [safeOffset, limite]);
+	const data = await pool.query(query, [safeOffset, limite]);
 	return data.rows;
 };
 //para verificar si existe un artista
@@ -38,14 +37,8 @@ const getArtistaPorNombre = async (nombre) => {
 	return rows[0] || null;
 };
 
-// const getArtistaPorId = async (id) => {
-// 	const query = 'SELECT * FROM principalMakers WHERE idprincipalmaker = $1';
-// 	const { rows } = await pool.query(query, [id]);
-// 	return rows[0] || null;
-// };
-
-const getArtistaPorId = async (idArtista) => {
-	const consulta = `
+const getArtistaPorId = async (artistaId) => {
+	const query = `
 							SELECT
 									pm.idPrincipalMaker,
 									pm.name,
@@ -70,7 +63,7 @@ const getArtistaPorId = async (idArtista) => {
 										pm.idPrincipalMaker = $1
 								GROUP BY
 										pm.idPrincipalMaker, pm.name, pm.placeOfBirth, pm.dateOfBirth, pm.dateOfDeath, pm.placeOfDeath, pm.nationality;`;
-	const { rows } = await pool.query(consulta, [idArtista]);
+	const { rows } = await pool.query(query, [artistaId]);
 	return rows[0] || null;
 };
 
@@ -86,7 +79,7 @@ const postArtista = async (artistaData) => {
 	return rows[0];
 };
 
-const putArtista = async (id, artistaData) => {
+const putArtista = async (artistaId, artistaData) => {
 	const { name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality } = artistaData;
 
 	const query = `
@@ -101,14 +94,14 @@ const putArtista = async (id, artistaData) => {
 		RETURNING *;
 	`;
 
-	const values = [name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality, id];
+	const values = [name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality, artistaId];
 	const { rows } = await pool.query(query, values);
 	return rows[0];
 };
 
-const deleteArtista = async (id) => {
-	const consulta = 'DELETE FROM principalMakers WHERE IdPrincipalMaker = $1 RETURNING *';
-	const { rows } = await pool.query(consulta, [id]);
+const deleteArtista = async (artistaId) => {
+	const query = 'DELETE FROM principalMakers WHERE IdPrincipalMaker = $1 RETURNING *';
+	const { rows } = await pool.query(query, [artistaId]);
 	return rows[0] || null;
 };
 

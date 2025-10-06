@@ -1,113 +1,65 @@
 import * as serviceOcupacion from '../services/serviceOcupacion.js';
-import { respuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
+import { formatoRespuestaUnico, respuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
 
-const getOcupaciones = async (req, res) => {
+const getOcupaciones = async (req, res, next) => {
 	try {
-		const ocupaciones = await serviceOcupacion.getOcupaciones();
+		const { pagina } = req.query;
+		const { limite } = req.query;
+		const { datos, paginacion } = await serviceOcupacion.getOcupaciones(pagina, limite);
+		const mensaje = 'Listado de Ocupaciones recuperado Exitosamente';
 
-		res.json(respuestaExitosa('Ocupaciones obtenidas correctamente.', ocupaciones, null, ocupaciones.length > 0));
+		res.status(200).json(formatoRespuestaUnico(datos, paginacion, mensaje));
 	} catch (error) {
-		console.error('Error al obtener ocupaciones:', error);
-		res.status(500).json(respuestaError('Error al obtener ocupaciones.', error.message));
+		next(error);
 	}
 };
 
-const getOcupacionesArtistaId = async (req, res) => {
+const getOcupacionPorId = async (req, res, next) => {
 	try {
-		const artistaId = req.params.idArtista;
+		const { idOcupacion } = req.params;
+		const ocupacion = await serviceOcupacion.getOcupacionPorId(idOcupacion);
+		const mensaje = 'Ocupaciones recuperadas Exitosamente';
 
-		const ocupaciones = await serviceOcupacion.getOcupacionesDeArtistaId(artistaId);
-		const hayResultado = ocupaciones.length > 0;
-
-		if (!hayResultado) {
-			return res.status(200).json(respuestaExitosa(`El artista con ID ${artistaId} no existe`, [], null, hayResultado));
-		} else {
-			return res
-				.status(200)
-				.json(respuestaExitosa(`Ocupaciones del artista con ID ${artistaId}`, ocupaciones, null, hayResultado));
-		}
+		res.status(200).json(formatoRespuestaUnico(ocupacion, mensaje));
 	} catch (error) {
-		console.error('Error al obtener las ocupaciones', error);
-		res.status(500).json(respuestaError('Error al obtener ocupaciones.', error.message));
+		next(error);
 	}
 };
 //Crear nueva ocupacion
-const postOcupacion = async (req, res) => {
+const postOcupacion = async (req, res, next) => {
 	try {
 		const { name } = req.body;
 		const nuevaOcupacion = await serviceOcupacion.postOcupacion(name);
-		res.status(201).json(respuestaExitosa('Ocupación creada correctamente.', nuevaOcupacion, null, true));
-	} catch (error) {
-		const codigo = error.code || 500;
+		const mensaje = 'Ocupacion creada Exitosamente';
 
-		console.error('Error al crear ocupación:', error);
-		res.status(codigo).json(respuestaError(error.message, error.detail || null));
+		res.status(201).json(formatoRespuestaUnico(nuevaOcupacion, mensaje));
+	} catch (error) {
+		next(error);
 	}
 };
 //actualiza ocupacion, id ocupacion name a actualizar
-const putOcupacion = async (req, res) => {
+const putOcupacion = async (req, res, next) => {
 	try {
 		const { idOcupacion } = req.params;
 		const { name } = req.body;
-
 		const ocupacionActualizada = await serviceOcupacion.putOcupacion(idOcupacion, name);
+		const mensaje = 'Ocupación actualizada correctamente.';
 
-		res.json(respuestaExitosa('Ocupación actualizada correctamente.', ocupacionActualizada, null, true));
+		res.status(200).json(formatoRespuestaUnico(mensaje, ocupacionActualizada));
 	} catch (error) {
-		const codigo = error.code || 500;
-
-		console.error('Error al actualizar la  ocupación:', error);
-		res.status(codigo).json(respuestaError(error.message, error.detail || null));
+		next(error);
 	}
 };
 
-const deleteOcupacion = async (req, res) => {
+const deleteOcupacion = async (req, res, next) => {
 	try {
 		const { idOcupacion } = req.params;
-		const data = await serviceOcupacion.deleteOcupacion(idOcupacion);
-		res.json(respuestaExitosa('Ocupación eliminada correctamente.', data, null, true));
+		const ocupacionEliminada = await serviceOcupacion.deleteOcupacion(idOcupacion);
+		const mensaje = 'Ocupación eliminada correctamente.';
+		res.status(200).json(formatoRespuestaUnico(ocupacionEliminada, mensaje));
 	} catch (error) {
-		console.error('Error al eliminar ocupación:', error);
-		res.status(500).json(respuestaError('Error al eliminar ocupación.', error.message));
+		next(error);
 	}
 };
 
-//REEVER SI PERTENECEN A ARTISTA CONTROLLER
-// asignar una ocupacion a un artista
-const putOcupacionArtista = async (req, res) => {
-	try {
-		const artistaId = req.params.idArtista;
-		const { name } = req.body;
-
-		const resultado = await serviceOcupacion.putOcupacion(artistaId, name);
-		res.json(respuestaExitosa(resultado.mensaje, resultado, null, resultado.asignada));
-	} catch (error) {
-		console.error(error);
-		res.status(500).json(respuestaError('Error al asignar ocupación.', error.message));
-	}
-};
-// quita la relacion de la tabla intermedia entre artista y ocupacion
-const deleteOcupacionDeArtista = async (req, res) => {
-	try {
-		const artistaId = req.params.idArtista;
-		const { name } = req.body;
-
-		const resultado = await serviceOcupacion.deletOcupacionDeArtista(artistaId, name);
-
-		res.status.json(200).json(
-			respuestaExitosa(
-				resultado.mensaje,
-				{
-					nombreOcupacion: nombreOcupacion
-				},
-				null,
-				resultado.eliminada
-			)
-		);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json(respuestaError('Error al eliminar ocupación.', error.message));
-	}
-};
-
-export { deleteOcupacion, getOcupaciones, getOcupacionesArtistaId, postOcupacion, putOcupacion };
+export { deleteOcupacion, getOcupaciones, getOcupacionPorId, postOcupacion, putOcupacion };
