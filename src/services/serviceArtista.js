@@ -2,7 +2,6 @@ import { RecursoExistenteError } from '../errors/recursoExistenteError.js';
 import { RecursoNoEncontradoError } from '../errors/recursoNoEncontradoError.js';
 import * as repositorioArtista from '../repositories/repositorioArtista.js';
 import * as repositorioArtistaOcupacion from '../repositories/repositorioArtistaOcupacion.js';
-import * as repositorioColeccion from '../repositories/repositorioColeccion.js';
 import * as repositorioObras from '../repositories/repositorioObra.js';
 import * as repositorioOcupacion from '../repositories/repositorioOcupacion.js';
 import { getPaginacion } from '../utils/paginacion.js';
@@ -16,8 +15,8 @@ const postArtista = async ({ occupations, datosArtista }) => {
 		);
 	}
 	await validarOcupaciones(occupations);
-
 	const artista = await repositorioArtista.postArtista(datosArtista);
+
 	if (occupations && occupations.length > 0) {
 		for (const ocupacionId of occupations) {
 			await repositorioArtistaOcupacion.asignarOcupacionArtista(artista.idprincipalmaker, ocupacionId);
@@ -57,12 +56,13 @@ const putArtista = async (artistaId, datosArtista) => {
 
 const getObrasArtista = async (nombre, pagina = 1, limite = 20) => {
 	const artista = await repositorioArtista.getArtistaPorNombre(nombre);
+
 	if (!artista) {
 		throw new RecursoNoEncontradoError(`Artista: ${nombre}`, 'El artista solicitado no existe.');
 	}
 	return getPaginacion(
 		() => repositorioObras.getTotalObrasArtista(artista.idprincipalmaker),
-		(offset, limit) => repositorioColeccion.getObrasArtista(offset, limit, artista.idprincipalmaker),
+		(offset, limit) => repositorioObras.getObrasArtista(offset, limit, artista.idprincipalmaker),
 		pagina,
 		limite
 	);

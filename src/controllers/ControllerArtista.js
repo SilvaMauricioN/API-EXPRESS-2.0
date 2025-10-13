@@ -1,11 +1,6 @@
-import { handleCustomError } from '../middlewares/errorHandler.js';
 import * as serviceArtista from '../services/serviceArtista.js';
-import {
-	formatoRespuestaColeccion,
-	formatoRespuestaUnico,
-	respuestaError,
-	respuestaExitosa
-} from '../utils/respuestaApi.js';
+import { formatoRespuestaColeccion, formatoRespuestaUnico } from '../utils/respuestaApi.js';
+
 //GET retorna todas las obras de un artista especifico
 const getObrasArtista = async (req, res, next) => {
 	try {

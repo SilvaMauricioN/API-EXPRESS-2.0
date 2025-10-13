@@ -17,7 +17,20 @@ const validarString = (string) => {
 };
 
 const normalizarString = (string) => {
-	return string.trim().toLowerCase().replace(/\s+/g, ' ');
+	//	return string.trim().toLowerCase().replace(/\s+/g, ' ');
+	return string.trim().replace(/\s+/g, ' ');
 };
 
-export { normalizarString, validarIdNumerico, validarString };
+const normalizarCadenaTexto = (valor) => {
+	if (typeof valor !== 'string' || valor === null || valor === undefined) {
+		return valor;
+	}
+
+	let normalizado = valor.trim();
+	// normalizado = normalizado.toLowerCase();
+	normalizado = normalizado.replace(/\s+/g, ' ');
+
+	return normalizado;
+};
+
+export { normalizarCadenaTexto, normalizarString, validarIdNumerico, validarString };

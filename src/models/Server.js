@@ -1,7 +1,6 @@
 import express from 'express';
 import { handleCustomError } from '../middlewares/errorHandler.js';
 import artistaRoutes from '../routes/routesArtista.js';
-import coleccionRoutes from '../routes/routesColeccion.js';
 import obrasRoutes from '../routes/routesObras.js';
 import ocupacionRoutes from '../routes/routesOcupacion.js';
 
@@ -19,9 +18,8 @@ export default class Server {
 		this.app.use(express.json());
 	}
 	routers() {
-		this.app.use('/api/museorijks/coleccion', coleccionRoutes); // todas las obras
 		this.app.use('/api/museorijks', artistaRoutes);
-		this.app.use('/api/museorijks/coleccion', obrasRoutes);
+		this.app.use('/api/museorijks', obrasRoutes);
 		this.app.use('/api/museorijks', ocupacionRoutes);
 
 		this.app.all('*', (req, res) => {

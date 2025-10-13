@@ -36,6 +36,10 @@ const getArtistaPorNombre = async (nombre) => {
 	const { rows } = await pool.query(query, [nombre]);
 	return rows[0] || null;
 };
+const getArtistaId = async (artistaId) => {
+	const resultado = await pool.query('SELECT 1 FROM principalMakers WHERE IdPrincipalMaker = $1', [artistaId]);
+	return resultado.rowCount > 0;
+};
 
 const getArtistaPorId = async (artistaId) => {
 	const query = `
@@ -83,8 +87,8 @@ const putArtista = async (artistaId, artistaData) => {
 	const { name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality } = artistaData;
 
 	const query = `
-		UPDATE principalMakers
-		SET name = $1,
+		UPDATE principalMakers SET 
+			name = $1,
 			placeOfBirth = $2,
 			dateOfBirth = $3,
 			dateOfDeath = $4,
@@ -107,6 +111,7 @@ const deleteArtista = async (artistaId) => {
 
 export {
 	deleteArtista,
+	getArtistaId,
 	getArtistaPorId,
 	getArtistaPorNombre,
 	getArtistas,

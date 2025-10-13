@@ -1,7 +1,9 @@
 import { pool } from '../db/conexion.js';
+import { artObjectsSchema } from '../scheme/artObject.js';
+import { construirQueryActualizar } from './construirQuery.js';
 
 // Funcion para obtener detalles de una obra especifica
-const getObraNumeroObjeto = async (numeroObra) => {
+const getObraDetalladaPorId = async (numeroObra) => {
 	const query = `
         SELECT            
             ao.objectNumber,
@@ -84,6 +86,63 @@ const getObraNumeroObjeto = async (numeroObra) => {
 	return data.rows;
 };
 
+const getObraPorNumeroObjeto = async (numeroObjeto) => {
+	const query = 'SELECT * FROM artObjects WHERE objectNumber = $1';
+	const { rows } = await pool.query(query, [numeroObjeto]);
+	return rows[0];
+};
+
+const getObrasArtista = async (offset, limite, artistaId) => {
+	const safeOffset = offset < 0 ? 0 : offset;
+	const query = `
+            SELECT 
+                ao.objectNumber,
+                ao.title,
+                ao.hasImage,
+                pm.name AS "principalOrFirstMaker",
+                ao.longTitle,
+                ao.hasImage,                   
+                json_build_object(
+                    'width', wi.width,
+                    'height', wi.height,
+                    'url', wi.url
+                ) AS "webImage"          
+                FROM artobjects ao
+                LEFT JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker
+                LEFT JOIN webImages wi ON ao.IdArtObject = wi.IdArtObject
+                WHERE ao.hasImage = TRUE AND
+                pm.IdPrincipalMaker = $3
+                OFFSET $1
+                LIMIT $2; `;
+
+	const data = await pool.query(query, [safeOffset, limite, artistaId]);
+	return data.rows;
+};
+
+const getColeccionObras = async (offset, limite) => {
+	const query = `
+            SELECT 
+                ao.objectNumber,
+                ao.title,
+                ao.hasImage,
+                pm.name AS "principalOrFirstMaker",
+                ao.longTitle,
+                ao.hasImage,                   
+                json_build_object(
+                    'width', wi.width,
+                    'height', wi.height,
+                    'url', wi.url
+                ) AS "webImage"          
+                FROM artObjects ao
+                LEFT JOIN principalMakers pm ON ao.IdPrincipalMaker = pm.IdPrincipalMaker
+                LEFT JOIN webImages wi ON ao.IdArtObject = wi.IdArtObject
+                WHERE ao.hasImage = TRUE
+                OFFSET $1
+                LIMIT $2; `;
+
+	const data = await pool.query(query, [offset, limite]);
+	return data.rows;
+};
 // Funcion para obtener el TOTAL de resultados
 const getCantidadObras = async (artista = null) => {
 	let query;
@@ -113,4 +172,94 @@ const getTotalObrasArtista = async (artistaId) => {
 	return rows[0].total;
 };
 
-export { getCantidadObras, getObraNumeroObjeto, getTotalObrasArtista };
+const getObraPorTitulo = async (titulo, artistaId) => {
+	const query = `
+        SELECT 1
+        FROM artObjects
+        WHERE LOWER(TRIM(title)) = LOWER(TRIM($1)) AND IdPrincipalMaker = $2;
+    `;
+	const values = [titulo, artistaId];
+	const result = await pool.query(query, values);
+
+	return result.rows.length > 0;
+};
+
+const getObraDifNumeroObjeto = async (numeroObjeto, titulo, artistaId) => {
+	const query = ` SELECT 1 FROM artObjects WHERE objectNumber <> $1   
+      AND LOWER(title) = LOWER($2) 
+      AND IdPrincipalMaker = $3`;
+
+	const valores = [numeroObjeto, titulo, artistaId];
+	const resultado = await pool.query(query, valores);
+
+	return resultado.rowCount > 0;
+};
+
+const postObra = async (datosObra) => {
+	const query = `
+    INSERT INTO artObjects (
+      objectNumber, title, longTitle, IdPrincipalMaker, hasImage,
+      productionPlaces, description, plaqueDescription,
+      materials, techniques, physicalMedium, scLabelLine, historicalDescription
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+    RETURNING *;
+  `;
+
+	const values = [
+		datosObra.objectNumber,
+		datosObra.title,
+		datosObra.longTitle,
+		datosObra.IdPrincipalMaker,
+		datosObra.hasImage,
+		datosObra.productionPlaces,
+		datosObra.description,
+		datosObra.plaqueDescription,
+		datosObra.materials,
+		datosObra.techniques,
+		datosObra.physicalMedium,
+		datosObra.scLabelLine,
+		datosObra.historicalDescription
+	];
+
+	const { rows } = await pool.query(query, values);
+	return rows[0];
+};
+
+const putObra = async (numeroObjeto, datosObra) => {
+	const NOMBRE_TABLA = 'artobjects';
+	const COLUMNA_ID = 'objectnumber';
+	const { query, valores } = construirQueryActualizar(
+		NOMBRE_TABLA,
+		COLUMNA_ID,
+		numeroObjeto,
+		datosObra,
+		artObjectsSchema
+	);
+
+	const { rows } = await pool.query(query, valores);
+	return rows[0];
+};
+
+const generateNumeroObjeto = async (prefijo = 'OA-N-') => {
+	const resultado = await pool.query(`SELECT nextval('seq_objectNumber') AS numero_siguiente;`);
+
+	const numeroSiguiente = resultado.rows[0].numero_siguiente;
+	const numberoFormateado = numeroSiguiente.toString();
+	const numberoObjeto = `${prefijo}${numberoFormateado}`;
+
+	return numberoObjeto;
+};
+
+export {
+	generateNumeroObjeto,
+	getCantidadObras,
+	getColeccionObras,
+	getObraDetalladaPorId,
+	getObraDifNumeroObjeto,
+	getObraPorNumeroObjeto,
+	getObraPorTitulo,
+	getObrasArtista,
+	getTotalObrasArtista,
+	postObra,
+	putObra
+};

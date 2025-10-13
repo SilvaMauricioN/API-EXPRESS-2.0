@@ -26,7 +26,8 @@ const getOcupacionesPorIds = async (ids = []) => {
 	return rows;
 };
 const getOcupacionPorNombre = async (nombreOcupacion) => {
-	const query = `SELECT * FROM occupations WHERE name = $1`;
+	//`SELECT * FROM occupations WHERE name = $1`
+	const query = `SELECT * FROM occupations WHERE LOWER(TRIM(name)) = LOWER(TRIM($1)) LIMIT 1`;
 	const { rows } = await pool.query(query, [nombreOcupacion]);
 	return rows[0];
 };
