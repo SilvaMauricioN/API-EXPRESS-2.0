@@ -22,28 +22,27 @@ const postArtista = async ({ occupations, datosArtista }) => {
 			await repositorioArtistaOcupacion.asignarOcupacionArtista(artista.idprincipalmaker, ocupacionId);
 		}
 	}
-	return await repositorioArtista(artista.idprincipalmaker);
+	return await repositorioArtista.getArtistaPorId(artista.idprincipalmaker);
 };
 
-const putArtista = async (artistaId, datosArtista) => {
-	const { occupations } = datosArtista;
+const actualizarArtista = async (artistaId, datosArtista) => {
+	const { occupations, ...artistaDatos } = datosArtista;
 	const existeArtista = await repositorioArtista.getArtistaPorId(artistaId);
 	if (!existeArtista) {
 		throw new RecursoNoEncontradoError(`Artista: ${artistaId}`, 'El artista solicitado no existe.');
 	}
 	// Si se está actualizando el nombre, verificar que no exista otro artista con ese nombre
-	if (datosArtista.name !== existeArtista.name) {
-		const artistaMismoNombre = await repositorioArtista.getArtistaPorNombre(datosArtista.name);
+	if (artistaDatos.name !== existeArtista.name) {
+		const artistaMismoNombre = await repositorioArtista.getArtistaPorNombre(artistaDatos.name);
 		if (artistaMismoNombre && artistaMismoNombre.idprincipalmaker !== artistaId) {
 			throw new RecursoExistenteError(
-				`El artista ${datosArtista.name} ya existe.`,
-				`Intento de duplicar un registro con nombre: ${datosArtista.name}`
+				`El artista ${artistaDatos.name} ya existe.`,
+				`Intento de duplicar un registro con nombre: ${artistaDatos.name}`
 			);
 		}
 	}
 	await validarOcupaciones(occupations);
-
-	const artista = await repositorioArtista.putArtista(artistaId, datosArtista);
+	const artista = await repositorioArtista.actualizarArtista(artistaId, artistaDatos);
 	await repositorioArtistaOcupacion.deleteRelacionPorArtistaId(artistaId);
 	//asignar nuevas ocupaciones a artista
 	if (occupations && occupations.length > 0) {
@@ -115,4 +114,4 @@ const validarOcupaciones = async (ocupaciones) => {
 		);
 	}
 };
-export { deleteArtista, getArtistaPorId, getArtistas, getObrasArtista, postArtista, putArtista };
+export { actualizarArtista, deleteArtista, getArtistaPorId, getArtistas, getObrasArtista, postArtista };

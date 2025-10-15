@@ -1,10 +1,9 @@
-const artistsSchema = {
-	name: { required: true, type: 'string', minLength: 2 },
-	placeOfBirth: { required: true, type: 'string' },
-	dateOfBirth: { type: 'date' },
-	dateOfDeath: { type: 'date' },
-	placeOfDeath: { required: true, type: 'string' },
-	nationality: { required: true, type: 'string' }
+export const principalMakerScheme = {
+	name: { required: true, type: String, minLength: 2, nullable: false },
+	placeOfBirth: { required: true, type: String, nullable: false },
+	dateOfBirth: { required: true, type: Date, nullable: false },
+	dateOfDeath: { required: true, type: Date, nullable: true },
+	placeOfDeath: { required: true, type: String, nullable: true },
+	nationality: { required: true, type: String, nullable: false },
+	occupations: { required: true, type: Array, itemsType: Number, nullable: true }
 };
-
-export { artistsSchema };

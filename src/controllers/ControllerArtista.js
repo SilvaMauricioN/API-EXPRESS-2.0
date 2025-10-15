@@ -55,12 +55,12 @@ const postArtista = async (req, res, next) => {
 	}
 };
 //PUT Modifica las especificaciones de unb artista
-const putArtista = async (req, res, next) => {
+const actualizarArtista = async (req, res, next) => {
 	try {
 		const { idArtista } = req.params;
 		const { ...datosArtista } = req.body;
 
-		const artistaActualizado = await serviceArtista.putArtista(idArtista, datosArtista);
+		const artistaActualizado = await serviceArtista.actualizarArtista(idArtista, datosArtista);
 		const mensaje = 'artista actualizado Correctamente';
 		res.status(200).json(formatoRespuestaUnico(artistaActualizado, mensaje));
 	} catch (error) {
@@ -78,4 +78,4 @@ const deleteArtista = async (req, res, next) => {
 		next(error);
 	}
 };
-export { deleteArtista, getArtistaPorId, getArtistas, getObrasArtista, postArtista, putArtista };
+export { actualizarArtista, deleteArtista, getArtistaPorId, getArtistas, getObrasArtista, postArtista };

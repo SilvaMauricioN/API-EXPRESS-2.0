@@ -117,56 +117,135 @@ const validarDatosArtistas = (req, res, next) => {
 	next();
 };
 
-// middlewares/validate.js
-const validarDatosBody = (objeto) => {
+const validarCamposNoPermitidos = (datosBody, scheme) => {
+	const errores = [];
+	for (const key in datosBody) {
+		if (!(key in scheme)) {
+			errores.push(`El campo '${key}' no es válido.`);
+		}
+	}
+	return errores;
+};
+
+const validarTiposDatosScheme = (key, regla, valor) => {
+	const errores = [];
+	switch (regla.type) {
+		case String:
+			if (typeof valor !== 'string') errores.push(`El campo '${key}' debe ser un texto.`);
+			break;
+		case Number:
+			if (typeof valor !== 'number' || isNaN(valor)) errores.push(`El campo '${key}' debe ser un número.`);
+			break;
+		case Boolean:
+			if (typeof valor !== 'boolean') errores.push(`El campo '${key}' debe ser true o false.`);
+			break;
+		case Array:
+			if (!Array.isArray(valor)) {
+				errores.push(`El campo '${key}' debe ser una lista/array.`);
+			} else {
+				errores.push(...validarContenidoArray(key, regla, valor));
+			}
+			break;
+		case Date:
+			if (typeof valor === 'string' && isNaN(Date.parse(valor))) {
+				errores.push(`El campo '${key}' debe tener un formato de fecha válido (YYYY-MM-DD).`);
+			}
+			break;
+	}
+
+	return errores;
+};
+
+const validarContenidoArray = (key, regla, valor) => {
+	const errores = [];
+	if (!regla.itemsType) return errores; // No hay especificación del tipo interno
+
+	for (let i = 0; i < valor.length; i++) {
+		const item = valor[i];
+		if (regla.itemsType === Number && (typeof item !== 'number' || isNaN(item))) {
+			errores.push(`El campo '${key}' tiene que ser númerico.`);
+		}
+		if (regla.itemsType === String && typeof item !== 'string') {
+			errores.push(`El campo '${key}' tiene que ser un texto`);
+		}
+	}
+	return errores;
+};
+
+const esValorVacio = (valor) => {
+	return (
+		valor === null ||
+		valor === undefined ||
+		(typeof valor === 'string' && valor.trim() === '') ||
+		(Array.isArray(valor) && valor.length === 0) ||
+		(typeof valor === 'object' && !Array.isArray(valor) && valor !== null && Object.keys(valor).length === 0)
+	);
+};
+
+const validarDatosBody = (scheme) => {
 	return (req, res, next) => {
-		const body = req.body;
+		const datosBody = req.body;
 		const errores = [];
+		const metodo = req.method.toUpperCase();
+		const esPOST = metodo === 'POST';
+		const esPUT = metodo === 'PUT';
+		const esPATCH = metodo === 'PATCH';
+		const requiereValidacionCompleta = esPOST || esPUT;
 
-		for (const key in objeto) {
-			const regla = objeto[key];
-			let valor = body[key];
+		// Validar campos no permitidos
+		errores.push(...validarCamposNoPermitidos(datosBody, scheme));
 
-			// 1. Campo obligatorio
-			if (regla.required && (valor === undefined || valor === null || valor.toString().trim() === '')) {
-				errores.push(`El campo '${key}' es obligatorio.`);
+		// Validar campos según el esquema
+		for (const key in scheme) {
+			const regla = scheme[key];
+			let valor = datosBody[key];
+			const estaPresente = datosBody.hasOwnProperty(key);
+
+			// En PATCH, ignorar campos no presentes
+			if (esPATCH && !estaPresente) {
 				continue;
 			}
 
-			// 2. Aplicar Normalización y reasignar
+			// Validar campos requeridos (POST/PUT)
+			if (requiereValidacionCompleta && regla.required === true) {
+				if (!estaPresente || valor === undefined) {
+					errores.push(`El campo '${key}' es obligatorio.`);
+					continue;
+				}
+			}
+
+			// Si el campo no está presente y no es requerido, continuar
+			if (!estaPresente) {
+				continue;
+			}
+
+			// Normalizar strings ANTES de validar
 			if (regla.type === 'string' && typeof valor === 'string') {
-				valor = normalizarCadenaTexto(valor);
-				req.body[key] = valor;
+				req.body[key] = normalizarCadenaTexto(valor);
 			}
 
-			// 3. Validación de tipo
-			if (valor !== undefined && regla.type) {
-				const type = regla.type;
-				if (type === 'string' && typeof valor !== 'string') {
-					errores.push(`El campo '${key}' debe ser un texto.`);
+			if (esValorVacio(valor)) {
+				if (!regla.nullable) {
+					errores.push(`El campo '${key}' no puede ser nulo.`);
 				}
-				if (type === 'number' && typeof valor !== 'number') {
-					errores.push(`El campo '${key}' debe ser un número.`);
-				}
-				if (type === 'boolean' && typeof valor !== 'boolean') {
-					errores.push(`El campo '${key}' debe ser true o false.`);
-				}
-				if (type === 'array' && !Array.isArray(valor)) {
-					errores.push(`El campo '${key}' debe ser una lista/array.`);
-				}
-				if (type === 'date' && valor && isNaN(Date.parse(valor))) {
-					errores.push(`El campo '${key}' debe tener un formato de fecha válido (YYYY-MM-DD).`);
-				}
+				continue;
 			}
 
-			// 4. Validación de longitud mínima
-			if (regla.minLength && typeof valor === 'string' && valor.length < regla.minLength) {
+			// Validar campos obligatorios que quedaron vacíos después de normalizar
+			if (regla.required && regla.type === 'string' && valor === '') {
+				errores.push(`El campo '${key}' no puede estar vacío.`);
+				continue;
+			}
+
+			errores.push(...validarTiposDatosScheme(key, regla, valor));
+
+			if (regla.minLength && typeof valor === 'string' && valor.length > 0 && valor.length < regla.minLength) {
 				errores.push(`El campo '${key}' debe tener al menos ${regla.minLength} caracteres.`);
 			}
 		}
 
 		if (errores.length > 0) {
-			return res.status(400).json({ errores: errores });
+			return res.status(400).json({ errores });
 		}
 
 		next();

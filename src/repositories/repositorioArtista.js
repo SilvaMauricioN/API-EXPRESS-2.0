@@ -1,4 +1,6 @@
 import { pool } from '../db/conexion.js';
+import { principalMakerScheme } from '../scheme/principalMaker.js';
+import { construirQueryActualizar } from './construirQuery.js';
 
 const getCantidadArtistas = async () => {
 	const query = `SELECT COUNT(*)::int AS total FROM principalMakers `;
@@ -83,23 +85,31 @@ const postArtista = async (artistaData) => {
 	return rows[0];
 };
 
-const putArtista = async (artistaId, artistaData) => {
-	const { name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality } = artistaData;
-
-	const query = `
-		UPDATE principalMakers SET 
-			name = $1,
-			placeOfBirth = $2,
-			dateOfBirth = $3,
-			dateOfDeath = $4,
-			placeOfDeath = $5,
-			nationality = $6
-		WHERE IdPrincipalMaker = $7
-		RETURNING *;
-	`;
-
-	const values = [name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality, artistaId];
-	const { rows } = await pool.query(query, values);
+const actualizarArtista = async (artistaId, artistaData) => {
+	// 	const { name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality } = artistaData;
+	//
+	// 	const query = `
+	// 		UPDATE principalMakers SET
+	// 			name = $1,
+	// 			placeOfBirth = $2,
+	// 			dateOfBirth = $3,
+	// 			dateOfDeath = $4,
+	// 			placeOfDeath = $5,
+	// 			nationality = $6
+	// 		WHERE IdPrincipalMaker = $7
+	// 		RETURNING *;
+	// 	`;
+	const NOMBRE_TABLA = 'principalmakers';
+	const COLUMNA_ID = 'idprincipalmaker';
+	const { query, valores } = construirQueryActualizar(
+		NOMBRE_TABLA,
+		COLUMNA_ID,
+		artistaId,
+		artistaData,
+		principalMakerScheme
+	);
+	// 	const values = [name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality, artistaId];
+	const { rows } = await pool.query(query, valores);
 	return rows[0];
 };
 
@@ -110,12 +120,12 @@ const deleteArtista = async (artistaId) => {
 };
 
 export {
+	actualizarArtista,
 	deleteArtista,
 	getArtistaId,
 	getArtistaPorId,
 	getArtistaPorNombre,
 	getArtistas,
 	getCantidadArtistas,
-	postArtista,
-	putArtista
+	postArtista
 };

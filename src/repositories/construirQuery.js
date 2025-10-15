@@ -9,7 +9,7 @@ const construirQueryActualizar = (nombreTabla, columnaId, valorId, datos, schema
 
 		// Se verifica que el campo esté en el esquema para seguridad
 		if (configCampo) {
-			const nombreColumnaDb = configCampo.dbName || key;
+			const nombreColumnaDb = (configCampo.dbName || key).toLowerCase();
 			listaActualizaciones.push(`"${nombreColumnaDb}" = $${paramIndex++}`);
 			valores.push(value);
 		}

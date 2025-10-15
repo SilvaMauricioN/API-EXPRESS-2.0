@@ -1,5 +1,5 @@
 import { pool } from '../db/conexion.js';
-import { artObjectsSchema } from '../scheme/artObject.js';
+import { artObjectsScheme } from '../scheme/artObject.js';
 import { construirQueryActualizar } from './construirQuery.js';
 
 // Funcion para obtener detalles de una obra especifica
@@ -225,7 +225,7 @@ const postObra = async (datosObra) => {
 	return rows[0];
 };
 
-const putObra = async (numeroObjeto, datosObra) => {
+const actualizarObra = async (numeroObjeto, datosObra) => {
 	const NOMBRE_TABLA = 'artobjects';
 	const COLUMNA_ID = 'objectnumber';
 	const { query, valores } = construirQueryActualizar(
@@ -233,7 +233,7 @@ const putObra = async (numeroObjeto, datosObra) => {
 		COLUMNA_ID,
 		numeroObjeto,
 		datosObra,
-		artObjectsSchema
+		artObjectsScheme
 	);
 
 	const { rows } = await pool.query(query, valores);
@@ -251,6 +251,7 @@ const generateNumeroObjeto = async (prefijo = 'OA-N-') => {
 };
 
 export {
+	actualizarObra,
 	generateNumeroObjeto,
 	getCantidadObras,
 	getColeccionObras,
@@ -260,6 +261,5 @@ export {
 	getObraPorTitulo,
 	getObrasArtista,
 	getTotalObrasArtista,
-	postObra,
-	putObra
+	postObra
 };

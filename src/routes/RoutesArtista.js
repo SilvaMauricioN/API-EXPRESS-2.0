@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import {
+	actualizarArtista,
 	deleteArtista,
 	getArtistaPorId,
 	getArtistas,
 	getObrasArtista,
-	postArtista,
-	putArtista
+	postArtista
 } from '../controllers/ControllerArtista.js';
 import {
 	validarDatosBody,
@@ -14,7 +14,7 @@ import {
 	validarOcupacion,
 	validarQueryString
 } from '../middlewares/Validaciones.js';
-import { artistsSchema } from '../scheme/principalMaker.js';
+import { principalMakerScheme } from '../scheme/principalMaker.js';
 
 const ruta = Router();
 //Coleccion de obras de un artista en particular a partir de su nombre
@@ -25,13 +25,20 @@ ruta.get('/artistas', validarDatosPaginacion, getArtistas);
 ruta.get('/artista/:idArtista', validarIdParam('idArtista'), getArtistaPorId);
 
 //crear un nuevo artista
-ruta.post('/artista', validarDatosBody(artistsSchema), validarOcupacion, postArtista);
+ruta.post('/artista', validarDatosBody(principalMakerScheme), validarOcupacion, postArtista);
 ruta.put(
 	'/artista/:idArtista',
 	validarIdParam('idArtista'),
-	validarDatosBody(artistsSchema),
+	validarDatosBody(principalMakerScheme),
 	validarOcupacion,
-	putArtista
+	actualizarArtista
+);
+ruta.patch(
+	'/artista/:idArtista',
+	validarIdParam('idArtista'),
+	validarDatosBody(principalMakerScheme),
+	validarOcupacion,
+	actualizarArtista
 );
 ruta.delete('/artista/:idArtista', validarIdParam('idArtista'), deleteArtista);
 

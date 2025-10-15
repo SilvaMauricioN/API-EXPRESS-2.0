@@ -38,16 +38,16 @@ const postObra = async (req, res, next) => {
 	}
 };
 
-const putObra = async (req, res, next) => {
+const actualizarObra = async (req, res, next) => {
 	try {
 		const { numeroObjeto } = req.params;
 		const { ...datosObra } = req.body;
 
-		const obraActualizada = await serviceObras.putObra(numeroObjeto, datosObra);
+		const obraActualizada = await serviceObras.actualizarObra(numeroObjeto, datosObra);
 		const mensaje = 'Obra actualizada Correctamente';
 		res.status(200).json(formatoRespuestaUnico(obraActualizada, mensaje));
 	} catch (error) {
 		next(error);
 	}
 };
-export { getColeccionObras, getObraPorId, postObra, putObra };
+export { actualizarObra, getColeccionObras, getObraPorId, postObra };

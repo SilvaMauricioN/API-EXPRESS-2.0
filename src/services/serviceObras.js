@@ -40,7 +40,7 @@ const postObra = async (datosObra) => {
 	return await repositorioObras.postObra(datosCompletos);
 };
 
-const putObra = async (numeroObjeto, datosObra) => {
+const actualizarObra = async (numeroObjeto, datosObra) => {
 	const { title, IdPrincipalMaker } = datosObra;
 	const existeObra = await repositorioObras.getObraPorNumeroObjeto(numeroObjeto);
 
@@ -67,6 +67,6 @@ const putObra = async (numeroObjeto, datosObra) => {
 		}
 	}
 
-	return await repositorioObras.putObra(numeroObjeto, datosObra);
+	return await repositorioObras.actualizarObra(numeroObjeto, datosObra);
 };
-export { getColeccionObras, getObraPorId, postObra, putObra };
+export { actualizarObra, getColeccionObras, getObraPorId, postObra };

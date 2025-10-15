@@ -7,14 +7,14 @@ import {
 	putOcupacion
 } from '../controllers/controllerOcupacion.js';
 import { validarDatosBody, validarIdParam } from '../middlewares/Validaciones.js';
-import { occupationsSchema } from '../scheme/occupations.js';
+import { occupationsScheme } from '../scheme/occupations.js';
 
 const ruta = Router();
 
 ruta.get('/ocupaciones', getOcupaciones);
 ruta.get('/ocupacion/:idOcupacion', validarIdParam('idOcupacion'), getOcupacionPorId);
-ruta.post('/ocupacion', validarDatosBody(occupationsSchema), postOcupacion);
-ruta.put('/ocupacion/:idOcupacion', validarIdParam('idOcupacion'), validarDatosBody(occupationsSchema), putOcupacion);
+ruta.post('/ocupacion', validarDatosBody(occupationsScheme), postOcupacion);
+ruta.put('/ocupacion/:idOcupacion', validarIdParam('idOcupacion'), validarDatosBody(occupationsScheme), putOcupacion);
 ruta.delete('/ocupacion/:idOcupacion', validarIdParam('idOcupacion'), deleteOcupacion);
 
 export default ruta;
