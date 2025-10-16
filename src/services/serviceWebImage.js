@@ -10,4 +10,23 @@ const postWebImages = async (datosImagen) => {
 	return await repositorioWebImage.postImagenWeb(datosImagen);
 };
 
-export { postWebImages };
+const actualizarWebImages = async (imagenId, datosImagen) => {
+	const existeImagen = await repositorioWebImage.getImagenPorId(imagenId);
+	if (!existeImagen) {
+		throw new RecursoExistenteError(`Imagen: ${imagenId}`, 'La imagen solicitada no existe');
+	}
+	// Si se está actualizando el id de la obra de arte (ID), verifica que no tenga imagen asignada.
+	if (datosImagen.IdArtObject !== existeImagen.IdArtObject) {
+		const existeImagenParaObra = await repositorioWebImage.getImagenDeObra(datosImagen.IdArtObject);
+		if (existeImagenParaObra && existeImagenParaObra.IdWebImage !== imagenId) {
+			throw new RecursoExistenteError(
+				`La obra ${datosImagen.IdArtObject} ya tiene iamgen asignada.`,
+				`Intento de duplicar un registro: ${datosImagen.IdArtObject}`
+			);
+		}
+	}
+
+	return await repositorioWebImage.actualizarWebImages(imagenId, datosImagen);
+};
+
+export { actualizarWebImages, postWebImages };

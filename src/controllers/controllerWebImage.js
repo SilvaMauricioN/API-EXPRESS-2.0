@@ -13,4 +13,17 @@ const postWebImages = async (req, res, next) => {
 	}
 };
 
-export { postWebImages };
+const actualizarWebImages = async (req, res, next) => {
+	try {
+		const { idImagen } = req.params;
+		const { ...datosImagen } = req.body;
+
+		const imagenActualizado = await serviceWebImage.actualizarWebImages(idImagen, datosImagen);
+		const mensaje = 'iamgen actualizada Correctamente';
+		res.status(200).json(formatoRespuestaUnico(imagenActualizado, mensaje));
+	} catch (error) {
+		next(error);
+	}
+};
+
+export { actualizarWebImages, postWebImages };

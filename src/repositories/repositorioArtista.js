@@ -86,19 +86,6 @@ const postArtista = async (artistaData) => {
 };
 
 const actualizarArtista = async (artistaId, artistaData) => {
-	// 	const { name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality } = artistaData;
-	//
-	// 	const query = `
-	// 		UPDATE principalMakers SET
-	// 			name = $1,
-	// 			placeOfBirth = $2,
-	// 			dateOfBirth = $3,
-	// 			dateOfDeath = $4,
-	// 			placeOfDeath = $5,
-	// 			nationality = $6
-	// 		WHERE IdPrincipalMaker = $7
-	// 		RETURNING *;
-	// 	`;
 	const NOMBRE_TABLA = 'principalmakers';
 	const COLUMNA_ID = 'idprincipalmaker';
 	const { query, valores } = construirQueryActualizar(
@@ -108,7 +95,6 @@ const actualizarArtista = async (artistaId, artistaData) => {
 		artistaData,
 		principalMakerScheme
 	);
-	// 	const values = [name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality, artistaId];
 	const { rows } = await pool.query(query, valores);
 	return rows[0];
 };
