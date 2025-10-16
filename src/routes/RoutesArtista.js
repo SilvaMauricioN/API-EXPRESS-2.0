@@ -11,7 +11,7 @@ import {
 	validarDatosBody,
 	validarDatosPaginacion,
 	validarIdParam,
-	validarOcupacion,
+	// validarOcupacion,
 	validarQueryString
 } from '../middlewares/Validaciones.js';
 import { principalMakerScheme } from '../scheme/principalMaker.js';
@@ -25,19 +25,19 @@ ruta.get('/artistas', validarDatosPaginacion, getArtistas);
 ruta.get('/artista/:idArtista', validarIdParam('idArtista'), getArtistaPorId);
 
 //crear un nuevo artista
-ruta.post('/artista', validarDatosBody(principalMakerScheme), validarOcupacion, postArtista);
+ruta.post('/artista', validarDatosBody(principalMakerScheme), postArtista);
 ruta.put(
 	'/artista/:idArtista',
 	validarIdParam('idArtista'),
 	validarDatosBody(principalMakerScheme),
-	validarOcupacion,
+	// validarOcupacion,
 	actualizarArtista
 );
 ruta.patch(
 	'/artista/:idArtista',
 	validarIdParam('idArtista'),
 	validarDatosBody(principalMakerScheme),
-	validarOcupacion,
+	// validarOcupacion,
 	actualizarArtista
 );
 ruta.delete('/artista/:idArtista', validarIdParam('idArtista'), deleteArtista);

@@ -3,6 +3,7 @@ import { handleCustomError } from '../middlewares/errorHandler.js';
 import artistaRoutes from '../routes/routesArtista.js';
 import obrasRoutes from '../routes/routesObras.js';
 import ocupacionRoutes from '../routes/routesOcupacion.js';
+import imagenRoutes from '../routes/routesWebImage.js';
 
 export default class Server {
 	constructor() {
@@ -21,6 +22,7 @@ export default class Server {
 		this.app.use('/api/museorijks', artistaRoutes);
 		this.app.use('/api/museorijks', obrasRoutes);
 		this.app.use('/api/museorijks', ocupacionRoutes);
+		this.app.use('/api/museorijks', imagenRoutes);
 
 		this.app.all('*', (req, res) => {
 			res.status(404).json({

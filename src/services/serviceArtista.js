@@ -41,14 +41,20 @@ const actualizarArtista = async (artistaId, datosArtista) => {
 			);
 		}
 	}
-	await validarOcupaciones(occupations);
-	const artista = await repositorioArtista.actualizarArtista(artistaId, artistaDatos);
-	await repositorioArtistaOcupacion.deleteRelacionPorArtistaId(artistaId);
-	//asignar nuevas ocupaciones a artista
-	if (occupations && occupations.length > 0) {
-		for (const ocupacionId of occupations) {
-			await repositorioArtistaOcupacion.asignarOcupacionArtista(artista.idprincipalmaker, ocupacionId);
+
+	if (occupations !== undefined) {
+		await validarOcupaciones(occupations);
+		await repositorioArtistaOcupacion.deleteRelacionPorArtistaId(artistaId);
+		//asignar nuevas ocupaciones a artista
+		if (occupations && occupations.length > 0) {
+			for (const ocupacionId of occupations) {
+				await repositorioArtistaOcupacion.asignarOcupacionArtista(artistaId, ocupacionId);
+			}
 		}
+	}
+
+	if (Object.keys(artistaDatos).length > 0) {
+		await repositorioArtista.actualizarArtista(artistaId, artistaDatos);
 	}
 	return await repositorioArtista.getArtistaPorId(artistaId);
 };
