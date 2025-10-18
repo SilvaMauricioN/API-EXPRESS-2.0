@@ -182,8 +182,26 @@ const esValorVacio = (valor) => {
 	);
 };
 
+const controlBodyVacio = (req, res) => {
+	const keys = Object.keys(req.body);
+
+	if (keys.length === 0) {
+		return res.status(400).json({
+			status: 'error',
+			mensaje: 'Petición inválida',
+			detalle: 'El cuerpo de la solicitud no puede estar vacío'
+		});
+	}
+};
+
 const validarDatosBody = (scheme) => {
 	return (req, res, next) => {
+		const errorResponse = controlBodyVacio(req, res);
+
+		if (errorResponse) {
+			return errorResponse;
+		}
+
 		const datosBody = req.body;
 		const errores = [];
 		const metodo = req.method.toUpperCase();

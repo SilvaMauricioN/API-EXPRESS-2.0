@@ -185,14 +185,14 @@ const getObraPorTitulo = async (titulo, artistaId) => {
 };
 
 const getObraDifNumeroObjeto = async (numeroObjeto, titulo, artistaId) => {
-	const query = ` SELECT 1 FROM artObjects WHERE objectNumber <> $1   
+	const query = ` SELECT * FROM artObjects WHERE objectNumber <> $1   
       AND LOWER(title) = LOWER($2) 
       AND IdPrincipalMaker = $3`;
 
 	const valores = [numeroObjeto, titulo, artistaId];
-	const resultado = await pool.query(query, valores);
+	const { rows } = await pool.query(query, valores);
 
-	return resultado.rowCount > 0;
+	return rows[0] || null;
 };
 
 const postObra = async (datosObra) => {

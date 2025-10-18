@@ -59,7 +59,7 @@ const actualizarObra = async (numeroObjeto, datosObra) => {
 
 	if (title !== existeObra.title) {
 		const obraMismoNombre = await repositorioObras.getObraDifNumeroObjeto(numeroObjeto, title, IdPrincipalMaker);
-		if (obraMismoNombre && obraMismoNombre.objectNumber !== numeroObjeto) {
+		if (obraMismoNombre) {
 			throw new RecursoExistenteError(
 				`La obra ${datosObra.title} ya existe.`,
 				`Intento de duplicar un registro con nombre: ${datosObra.title}`
