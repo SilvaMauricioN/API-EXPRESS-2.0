@@ -1,26 +1,32 @@
 import { respuestaError } from '../utils/respuestaApi.js';
 
+const SQL_ERROR_MAP = {
+	23505: { code: 409, mensaje: 'Valor duplicado, ya existe un registro con este dato.' },
+	23503: { code: 400, mensaje: 'Violación de clave foránea, revise relaciones.' },
+	'22P02': { code: 400, mensaje: 'Formato de dato inválido.' },
+	42703: { code: 400, mensaje: 'Columna no existe en la tabla.' },
+	42601: { code: 400, mensaje: 'Error de sintaxis en la consulta SQL.' },
+	40001: { code: 409, mensaje: 'Conflicto de transacción, intente de nuevo.' },
+	'42P01': { code: 500, mensaje: 'Error interno: tabla no encontrada.' },
+	'08000': { code: 503, mensaje: 'No se pudo conectar a la base de datos.' }
+};
+
 const mapSQLErrorToHTTP = (sqlCode) => {
-	switch (sqlCode) {
-		case '23505':
-			return { code: 409, mensaje: 'Valor duplicado, ya existe un registro con este dato.' };
-		case '23503':
-			return { code: 400, mensaje: 'Violación de clave foránea, revise relaciones.' };
-		case '22P02':
-			return { code: 400, mensaje: 'Formato de dato inválido.' };
-		case '42703':
-			return { code: 400, mensaje: 'Columna no existe en la tabla.' };
-		case '42601':
-			return { code: 400, mensaje: 'Error de sintaxis en la consulta SQL.' };
-		case '40001':
-			return { code: 409, mensaje: 'Conflicto de transacción, intente de nuevo.' };
-		case '42P01':
-			return { code: 500, mensaje: 'Error interno: tabla no encontrada.' };
-		case '08000':
-			return { code: 503, mensaje: 'No se pudo conectar a la base de datos.' };
-		default:
-			return { code: 500, mensaje: 'Error interno del servidor.' };
+	const errorMapeado = SQL_ERROR_MAP[sqlCode];
+	if (errorMapeado) {
+		return errorMapeado;
 	}
+	const erroresConexion = ['ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'EHOSTUNREACH', 'ENOTFOUND'];
+	if (erroresConexion.includes(sqlCode)) {
+		return { code: 503, mensaje: 'Conexión con la base de datos interrumpida o rechazada.' };
+	}
+
+	const erroresServidor = ['57P01', '57P02', '57P03', 'XX000'];
+	if (erroresServidor.includes(sqlCode)) {
+		return { code: 503, mensaje: 'El servidor de base de datos cerró la conexión inesperadamente.' };
+	}
+
+	return { code: 500, mensaje: 'Error interno del servidor.' };
 };
 
 const handleCustomError = (res, error) => {
