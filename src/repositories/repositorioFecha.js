@@ -2,8 +2,19 @@ import { pool } from '../db/conexion.js';
 import { datingScheme } from '../scheme/dating.js';
 import { construirQueryActualizar } from './construirQuery.js';
 
-const getFechaDeObra = async (obraId) => {
+const getFechaDeObraPorId = async (obraId) => {
 	const query = `SELECT * FROM datings WHERE IdArtObject = $1`;
+	const { rows } = await pool.query(query, [obraId]);
+	return rows[0];
+};
+
+const verificarObraYFecha = async (obraId) => {
+	const query = `SELECT a.IdArtObject, d.IdDating
+      FROM artObjects a
+      LEFT JOIN datings d 
+        ON a.IdArtObject = d.IdArtObject
+      WHERE a.IdArtObject = $1;`;
+
 	const { rows } = await pool.query(query, [obraId]);
 	return rows[0];
 };
@@ -37,4 +48,4 @@ const actualizarDating = async (fechaId, datosFecha) => {
 	return rows[0];
 };
 
-export { actualizarDating, getFechaDeObra, getFechaPorId, postDating };
+export { actualizarDating, getFechaDeObraPorId, getFechaPorId, postDating, verificarObraYFecha };

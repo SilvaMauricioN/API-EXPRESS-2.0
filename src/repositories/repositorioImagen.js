@@ -10,6 +10,18 @@ const postImagenWeb = async (datosImagen) => {
 	return rows[0];
 };
 
+const verificarObraEImagen = async (obraId) => {
+	const query = `
+		SELECT a.IdArtObject, wi.IdWebImage
+		FROM artObjects a
+		LEFT JOIN webImages wi
+			ON a.IdArtObject = wi.IdArtObject
+		WHERE a.IdArtObject = $1;`;
+
+	const { rows } = await pool.query(query, [obraId]);
+	return rows[0];
+};
+
 const getImagenDeObra = async (obraId) => {
 	const query = `SELECT * FROM webImages WHERE IdArtObject = $1`;
 	const { rows } = await pool.query(query, [obraId]);
@@ -30,4 +42,4 @@ const actualizarWebImages = async (imagenId, datosImagen) => {
 	return rows[0];
 };
 
-export { actualizarWebImages, getImagenDeObra, getImagenPorId, postImagenWeb };
+export { actualizarWebImages, getImagenDeObra, getImagenPorId, postImagenWeb, verificarObraEImagen };

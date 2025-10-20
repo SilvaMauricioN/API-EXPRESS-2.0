@@ -1,5 +1,6 @@
 import express from 'express';
 import { handleCustomError } from '../middlewares/errorHandler.js';
+import tituloAdicRoutes from '../routes/routerTituloAdic.js';
 import artistaRoutes from '../routes/routesArtista.js';
 import fechaRoutes from '../routes/routesFechas.js';
 import obrasRoutes from '../routes/routesObras.js';
@@ -25,6 +26,7 @@ export default class Server {
 		this.app.use('/api/museorijks', ocupacionRoutes);
 		this.app.use('/api/museorijks', imagenRoutes);
 		this.app.use('/api/museorijks', fechaRoutes);
+		this.app.use('/api/museorijks', tituloAdicRoutes);
 
 		this.app.all('*', (req, res) => {
 			res.status(404).json({

@@ -2,6 +2,11 @@ import { pool } from '../db/conexion.js';
 import { artObjectsScheme } from '../scheme/artObject.js';
 import { construirQueryActualizar } from './construirQuery.js';
 
+const getObraPorId = async (obraId) => {
+	const query = 'SELECT * FROM artObjects WHERE IdArtObject = $1';
+	const { rows } = await pool.query(query, [obraId]);
+	return rows[0];
+};
 // Funcion para obtener detalles de una obra especifica
 const getObraDetalladaPorId = async (numeroObra) => {
 	const query = `
@@ -257,6 +262,7 @@ export {
 	getColeccionObras,
 	getObraDetalladaPorId,
 	getObraDifNumeroObjeto,
+	getObraPorId,
 	getObraPorNumeroObjeto,
 	getObraPorTitulo,
 	getObrasArtista,

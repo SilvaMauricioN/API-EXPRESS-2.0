@@ -22,4 +22,13 @@ const verificarConexion = async () => {
 
 verificarConexion();
 
+pool.on('error', (err, client) => {
+	console.error('🚨 Error inesperado en el pool o en un cliente inactivo de Postgres:', err);
+
+	if (err.message && err.message.includes(':client_termination')) {
+		console.warn('Advertencia: Cliente de BD terminado abruptamente. Pool lo gestionará.');
+		return;
+	}
+});
+
 export { pool };
