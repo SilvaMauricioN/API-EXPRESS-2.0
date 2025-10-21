@@ -4,275 +4,58 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Documentación API - Museo Rijks</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
 		<header class="encabezado-api">
-			<h1>Documentación de la API</h1>
+			<h1>Documentación de la API del Museo Rijks</h1>
 			<p>Bienvenido a la Api. Aquí encontrarás cómo usar los endpoints. API de consulta a obras del MUSEO RIJKS</p>
 		</header>
 
 		<div class="layout-documentacion">
 			<nav class="barra-lateral">
-				<h2>Endpoints</h2>
-				<ul>
-					<li><a href="#coleccion">Colección</a></li>
-					<li><a href="#detalle">Detalle</a></li>
+				<h2 id="menu-toggle" class="menu-desplegable-titulo">MENU API</h2>
+				<ul id="menu-lista" class="menu-desplegable-lista">
+					<li><a href="index.html" class="activo">Inicio</a></li>
+					<li><a href="artistas.html">Artistas</a></li>
+					<li><a href="coleccion.html">Obras De Artistas</a></li>
+					<li><a href="coleccionObra.html">Colección De Obras</a></li>
+					<li><a href="detalleObra.html">Detalles De Obra</a></li>
 				</ul>
 			</nav>
 
 			<main class="contenido-documentacion">
-				<section id="coleccion" class="seccion-endpoint">
-					<h2>Colección</h2>
+				<section class="seccion-endpoint">
+					<h2>Introducción y Guía de Uso</h2>
 					<p>
-						Este endpoint da acceso a la colección con una breve información sobre cada objeto. Los resultados se
-						dividen en páginas. Utilizando los parámetros `pagina` y `limite` puede obtener más resultados, hasta un
-						total de 10.000.
+						Esta API permite la consulta de obras de la colección del Museo Rijks. Está diseñada para ser simple y de
+						solo lectura (GET).
 					</p>
 
-					<div class="caja-documento">
-						<div class="titulo-documento">URL Base de Colección</div>
-						<div class="contenido-documento">
-							<p id="url-coleccion">http://localhost:8080/api/museorijks/coleccion</p>
-							<button
-								class="btn-copiar"
-								aria-label="Copiar URL de colección"
-								onclick="copiarTexto('url-coleccion', this)"
-							>
-								Copiar
-							</button>
-						</div>
-					</div>
-
-					<h3>Parámetros</h3>
-					<p>Se admiten los siguientes parámetros:</p>
-					<div class="tabla-scroll">
-						<table>
-							<thead>
-								<tr>
-									<th>Parámetro</th>
-									<th>Formato</th>
-									<th>Por defecto</th>
-									<th>Descripción</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>id</td>
-									<td>a-z 0-9</td>
-									<td>-</td>
-									<td>Obligatorio: agregue su clave API a cada solicitud.</td>
-								</tr>
-								<tr>
-									<td>pagina</td>
-									<td>0-n</td>
-									<td>1</td>
-									<td>La página de resultados.</td>
-								</tr>
-								<tr>
-									<td>limite</td>
-									<td>1-30</td>
-									<td>20</td>
-									<td>El numero de resultados por página.</td>
-								</tr>
-								<tr>
-									<td>autor</td>
-									<td>a-z</td>
-									<td>-</td>
-									<td>
-										Este agente debe crear el objeto. Distingue entre mayúsculas y minúsculas. Por
-										ejemplo:Rembrandt+van+Rijn
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<p class="nota"><strong>Nota:</strong> Ten en cuenta que `pagina * limite` no debe superar 10.000.</p>
-
-					<section class="ejemplo">
-						<h3>Ejemplo de Coleccion</h3>
-
-						<h4>Petición</h4>
-						<div class="caja-documento">
-							<div class="contenido-documento">
-								<p id="url-coleccion-ej">http://localhost:8080/api/museorijks/coleccion</p>
-								<button
-									class="btn-copiar"
-									aria-label="Copiar URL de ejemplo"
-									onclick="copiarTexto('url-coleccion-ej', this)"
-								>
-									Copiar
-								</button>
-							</div>
-						</div>
-
-						<h4>Respuesta</h4>
-						<div class="caja-documento">
-							<div class="contenido-documento">
-								<pre class="codigo-json" id="json-coleccion-res"><code>{
-	"status": "success",
-	"mensaje": "Colección de obras de arte recuperada exitosamente.",
-	"paginacion": {
-		"resultadoTotal": 52,
-		"paginaActual": 1,
-		"limite": 20,
-		"paginasTotales": 3
-	},
-	"data": [
-		{
-			"objectnumber": "SK-C-597",
-			"title": "Retrato de una Mujer, Probablemente Maria Trip (1619-1683)",
-			"hasimage": true,
-			"principalOrFirstMaker": "Rembrandt van Rijn",
-			"longtitle": "Retrato de una Mujer, Probablemente Maria Trip (1619-1683), Rembrandt van Rijn, 1639",
-			"webImage": {
-				"width": 4351,
-				"height": 5754,
-				"url": "https://..."
-			}
-		}
-	]
-}</code></pre>
-								<button
-									class="btn-copiar json"
-									aria-label="Copiar JSON de respuesta"
-									onclick="copiarTexto('json-coleccion-res', this)"
-								>
-									Copiar
-								</button>
-							</div>
-						</div>
-					</section>
-				</section>
-
-				<section id="detalle" class="seccion-endpoint">
-					<h2>Detalles de la colección</h2>
-					<p>
-						Este endpoint proporciona más detalles sobre un objeto específico. Los números de objeto se pueden obtener a
-						partir de los resultados proporcionados en el endpoint Colección.
-					</p>
-					<div class="caja-documento">
-						<div class="titulo-documento">Ejemplo</div>
-						<div class="contenido-documento">
-							<p id="url-coleccion-detalle">http://localhost:8080/api/museorijks/coleccion/obra/{object-number}</p>
-							<button
-								class="btn-copiar"
-								aria-label="Copiar URL de detalle"
-								onclick="copiarTexto('url-coleccion-detalle', this)"
-							>
-								Copiar
-							</button>
-						</div>
-					</div>
-
-					<h3>Parámetros</h3>
-					<p>Se admiten los siguientes parámetros:</p>
-					<div class="tabla-scroll">
-						<table>
-							<thead>
-								<tr>
-									<th>Parámetro</th>
-									<th>Formato</th>
-									<th>Por defecto</th>
-									<th>Descripción</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>id</td>
-									<td>a-z 0-9</td>
-									<td>-</td>
-									<td>Obligatorio: agregue su clave API a cada solicitud.</td>
-								</tr>
-								<tr>
-									<td>object-number</td>
-									<td>a-z 0-9</td>
-									<td>-</td>
-									<td>El identificador del objeto (distingue entre mayúsculas y minúsculas).</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<section class="ejemplo">
-						<h3>Ejemplo de Detalle de la Coleccion</h3>
-
-						<h4>Petición</h4>
-						<div class="caja-documento">
-							<div class="contenido-documento">
-								<p id="url-coleccion-detalle-ej">http://localhost:8080/api/museorijks/coleccion/obra/SK-A-3262</p>
-								<button
-									class="btn-copiar"
-									aria-label="Copiar URL de ejemplo"
-									onclick="copiarTexto('url-coleccion-detalle-ej', this)"
-								>
-									Copiar
-								</button>
-							</div>
-						</div>
-
-						<h4>Respuesta</h4>
-						<div class="caja-documento">
-							<div class="contenido-documento">
-								<pre class="codigo-json" id="json-coleccion-detalle-res"><code>{
-	"status": "success",
-	"mensaje": "Obra de arte recuperada exitosamente.",
-	"hayResultado": true,
-	"data": [
-		{
-			"objectnumber": "SK-A-3262",
-			"title": "Autorretrato",
-			"longtitle": "Autorretrato, Vincent van Gogh, 1887",
-			"hasimage": true,
-			"productionplaces": [],
-			"description": "Autorretrato de Vincent van Gogh. Busto con chaqueta marrón y sombrero gris.",
-			"plaquedescription": "Después de escuchar a su hermano Theo describir el nuevo estilo colorido del arte francés,
-					Vincent decidió en 1886 mudarse a París. Pronto comenzó a experimentar con el nuevo idioma en una serie de autorretratos.
-					Esto fue principalmente para evitar el gasto de usar modelos. Aquí se pintó a sí mismo como un parisino apuesto,
-					con pinceladas sueltas y regulares en colores llamativos.",
-			"materials": [],
-			"techniques": [],
-			"physicalmedium": "cartón",
-			"sclabelline": "Vincent van Gogh (1853-1890), óleo sobre cartón, 1887",
-				"historicaldescription": "Vincent se mudó a París en 1886, después de enterarse por su hermano Theo del nuevo y colorido estilo
-					de pintura francesa. Sin perder tiempo, lo probó en varios autorretratos. 
-					Hizo esto principalmente para evitar tener que pagar por un modelo.
-					Utilizando pinceladas rítmicas en colores llamativos, se retrató aquí como un parisino vestido a la moda.",
-			"objectTypes": [],
-			"otherTitles": [],
-			"datings": {},
-			"principalOrFirstMaker": {},
-			"webImage": {}
-		}
-	]
-}</code></pre>
-								<button
-									class="btn-copiar json"
-									aria-label="Copiar JSON de respuesta"
-									onclick="copiarTexto('json-coleccion-detalle-res', this)"
-								>
-									Copiar
-								</button>
-							</div>
-						</div>
-					</section>
+					<h3>Cómo Empezar:</h3>
+					<ol>
+						<li>
+							<strong>Obtén tu Clave:</strong> Asegúrate de tener tu clave API. Esta debe ser enviada en el parámetro
+							`key` en cada solicitud.
+						</li>
+						<li>
+							<strong>Consulta la Colección:</strong> Usa el enlace "Colección" para listar obras y obtener sus
+							identificadores.
+						</li>
+						<li>
+							<strong>Consulta el Detalle:</strong> Usa el identificador obtenido para consultar los detalles de una
+							obra específica.
+						</li>
+					</ol>
 				</section>
 			</main>
 		</div>
 
 		<footer class="pie-api">
-			<p>&copy; 2025 Mi Empresa. Todos los derechos reservados.</p>
+			<p>&copy; 2025 Todos los derechos reservados.</p>
 		</footer>
 
-		<script>
-			function copiarTexto(id, btn) {
-				const texto = document.getElementById(id).innerText;
-				navigator.clipboard.writeText(texto).then(() => {
-					btn.textContent = '¡Copiado!';
-					setTimeout(() => (btn.textContent = 'Copiar'), 2000);
-				});
-			}
-		</script>
+		<script src="script.js"></script>
 	</body>
 </html>

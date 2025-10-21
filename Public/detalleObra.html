@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Detalle Obra - Documentación API</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<header class="encabezado-api">
+			<h1>Documentación de la API del Museo Rijks</h1>
+			<p>Bienvenido a la Api. Aquí encontrarás cómo usar los endpoints. API de consulta a obras del MUSEO RIJKS</p>
+		</header>
+
+		<div class="layout-documentacion">
+			<nav class="barra-lateral">
+				<h2 id="menu-toggle" class="menu-desplegable-titulo">MENU API</h2>
+				<ul>
+					<li><a href="index.html">Inicio</a></li>
+					<li><a href="artistas.html">Artistas</a></li>
+					<li><a href="coleccion.html">Obras De Artistas</a></li>
+					<li><a href="coleccionObra.html">Colección De Obras</a></li>
+					<li><a href="detalleObra.html" class="activo">Detalles De Obra</a></li>
+				</ul>
+			</nav>
+
+			<main class="contenido-documentacion">
+				<section id="detalle" class="seccion-endpoint">
+					<h2>Detalles De La Obra</h2>
+					<p>
+						Este endpoint proporciona más detalles sobre un objeto específico. Los números de objeto se pueden obtener a
+						partir de los resultados proporcionados en el endpoint Colección.
+					</p>
+
+					<div class="metodo-http"><strong>MÉTODO:</strong> <span class="get-badge">GET</span></div>
+
+					<div class="caja-documento">
+						<div class="titulo-documento">Ejemplo</div>
+						<div class="contenido-documento">
+							<p id="url-coleccion-detalle">
+								http://localhost:8080/api/museorijks/coleccion/obra/<strong>{objectnumber}</strong>
+							</p>
+							<button
+								class="btn-copiar"
+								aria-label="Copiar URL de detalle"
+								onclick="copiarTexto('url-coleccion-detalle', this)"
+							>
+								Copiar
+							</button>
+						</div>
+					</div>
+
+					<h3>Parámetros</h3>
+					<p>Este endpoint requiere un parámetro de ruta y un parámetro de consulta obligatorio:</p>
+					<div class="tabla-scroll">
+						<table>
+							<thead>
+								<tr>
+									<th>Parámetro</th>
+									<th>Formato</th>
+									<th>Por defecto</th>
+									<th>Descripción</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Key</td>
+									<td><strong>a-z 0-9</strong></td>
+									<td>-</td>
+									<td>Obligatorio: agregue su clave API a cada solicitud.</td>
+								</tr>
+								<tr>
+									<td>objectnumber</td>
+									<td><strong>a-z 0-9</strong></td>
+									<td>-</td>
+									<td>El identificador del objeto (distingue entre mayúsculas y minúsculas).</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<section class="ejemplo">
+						<h3>Ejemplo de Detalle de la Coleccion</h3>
+
+						<h4>Petición de Ejemplo</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<p id="url-coleccion-detalle-ej">
+									http://localhost:8080/api/museorijks/coleccion/obra/SK-A-3262?id=TU_CLAVE_AQUI
+								</p>
+								<button
+									class="btn-copiar"
+									aria-label="Copiar URL de ejemplo"
+									onclick="copiarTexto('url-coleccion-detalle-ej', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+
+						<h4>Estructura de la Respuesta (Objeto Detalle)</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<pre class="codigo-json" id="json-coleccion-detalle-res"><code>{
+	"status": "success",
+	"mensaje": "Obra de arte recuperada exitosamente.",
+	"hayResultado": true,
+	"data": [
+		{
+			"objectnumber": "SK-A-3262",
+			"title": "Autorretrato",
+			"longtitle": "Autorretrato, Vincent van Gogh, 1887",
+			"hasimage": true,
+			"productionplaces": [],
+			"description": "Autorretrato de Vincent van Gogh. Busto con chaqueta marrón y sombrero gris.",
+			"plaquedescription": "Después de escuchar a su hermano Theo describir el nuevo estilo colorido del arte francés,
+					Vincent decidió en 1886 mudarse a París. Pronto comenzó a experimentar con el nuevo idioma en una serie de autorretratos.
+					Esto fue principalmente para evitar el gasto de usar modelos. Aquí se pintó a sí mismo como un parisino apuesto,
+					con pinceladas sueltas y regulares en colores llamativos.",
+			"materials": [],
+			"techniques": [],
+			"physicalmedium": "cartón",
+			"sclabelline": "Vincent van Gogh (1853-1890), óleo sobre cartón, 1887",
+				"historicaldescription": "Vincent se mudó a París en 1886, después de enterarse por su hermano Theo del nuevo y colorido estilo
+					de pintura francesa. Sin perder tiempo, lo probó en varios autorretratos. 
+					Hizo esto principalmente para evitar tener que pagar por un modelo.
+					Utilizando pinceladas rítmicas en colores llamativos, se retrató aquí como un parisino vestido a la moda.",
+			"objectTypes": [],
+			"otherTitles": [],
+			"datings": {},
+			"principalOrFirstMaker": {},
+			"webImage": {}
+		}
+	]
+}</code></pre>
+								<button
+									class="btn-copiar json"
+									aria-label="Copiar JSON de respuesta"
+									onclick="copiarTexto('json-coleccion-detalle-res', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+					</section>
+				</section>
+			</main>
+		</div>
+
+		<footer class="pie-api">
+			<p>&copy; 2025 Todos los derechos reservados.</p>
+		</footer>
+
+		<script src="script.js"></script>
+	</body>
+</html>

@@ -18,18 +18,16 @@ body {
 
 /* NAV lateral */
 .barra-lateral {
-	width: 10%;
+	width: 180px;
 	color: #fff;
-	padding: 1.5rem;
 	position: sticky;
 	top: 0;
 	height: 100vh;
-	border-right: 1px solid #767b81;
+	border-right: 2px solid #767b81;
 }
 
 .barra-lateral h2 {
 	font-size: 1.2rem;
-	margin-bottom: 1rem;
 }
 
 .barra-lateral ul {
@@ -37,32 +35,38 @@ body {
 	padding-left: 0;
 }
 
-.barra-lateral li {
-	margin-bottom: 1rem;
+.barra-lateral a {
+	text-decoration: none;
+	display: block;
+	padding: 8px 15px;
+	color: #cbd5e1;
+	font-weight: 500;
+	transition: background-color 0.3s;
 }
 
-.barra-lateral a {
-	color: #cbd5e1;
-	text-decoration: none;
-	font-weight: 500;
-}
 .barra-lateral a:hover {
-	text-decoration: underline;
+	text-decoration: none;
 	color: #ffffff;
+}
+
+.barra-lateral a.activo {
+	background-color: #181a1b;
+	color: white;
+	font-weight: bold;
 }
 
 /* CONTENIDO principal */
 .contenido-documentacion {
 	flex: 1;
 	padding: 0rem 1.5rem 1.5rem 1.5rem;
-	width: 90%;
+	width: 85%;
 }
 
 /* Encabezado */
 .encabezado-api {
 	text-align: center;
 	padding: 2rem;
-	border-bottom: 1px solid #767b81;
+	border-bottom: 2px solid #767b81;
 }
 
 .encabezado-api h1 {
@@ -96,6 +100,9 @@ h4 {
 	margin-bottom: 1rem;
 	padding-bottom: 0.5rem;
 }
+ol {
+	padding-left: 1rem;
+}
 
 .caja-documento {
 	background-color: #282c34;
@@ -108,7 +115,7 @@ h4 {
 .titulo-documento {
 	padding: 1rem;
 	font-weight: bold;
-	border-bottom: 1px solid #444952;
+	border-bottom: 2px solid #444952;
 }
 
 .contenido-documento {
@@ -207,6 +214,16 @@ code {
 	text-align: center;
 	padding-top: 1rem;
 	font-size: 0.9rem;
-	border-top: 1px solid #767b81;
+	border-top: 2px solid #767b81;
 	color: #888;
+}
+
+/* Estilos para el encabezado menu*/
+.menu-desplegable-titulo {
+	padding: 10px 15px;
+	border-bottom: 2px solid #767b81;
+	user-select: none;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
