@@ -263,11 +263,51 @@ const validarDatosBody = (scheme) => {
 		}
 
 		if (errores.length > 0) {
-			return res.status(400).json({ errores });
+			return res.status(400).json(respuestaError('Tipo de dato Incorrecto', errores));
+			//return res.status(400).json({ errores });
 		}
 
 		next();
 	};
 };
 
-export { validarDatosBody, validarDatosPaginacion, validarIdParam, validarNombreOcupacion, validarQueryString };
+const validarDevs = (schema) => {
+	return (req, res, next) => {
+		const data = req.body;
+		const errores = [];
+
+		for (const [key, rules] of Object.entries(schema)) {
+			const value = data[key];
+
+			//  Longitud mínima
+			if (rules.minLength && value.length < rules.minLength) {
+				errores.push(`${key} debe tener al menos ${rules.minLength} caracteres`);
+			}
+
+			//  Longitud máxima
+			if (rules.maxLength && value.length > rules.maxLength) {
+				errores.push(`${key} no debe superar los ${rules.maxLength} caracteres`);
+			}
+
+			//  Patrón
+			if (rules.pattern && !rules.pattern.test(value)) {
+				errores.push(`${key} tiene un formato inválido`);
+			}
+		}
+		if (errores.length > 0) {
+			return res.status(400).json(respuestaError('Datos Incorrectos', errores));
+			//return res.status(400).json({ errores });
+		}
+
+		next();
+	};
+};
+
+export {
+	validarDatosBody,
+	validarDatosPaginacion,
+	validarDevs,
+	validarIdParam,
+	validarNombreOcupacion,
+	validarQueryString
+};

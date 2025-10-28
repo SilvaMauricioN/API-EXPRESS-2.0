@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { actualizarObra, getColeccionObras, getObraPorId, postObra } from '../controllers/ControllerObras.js';
+import { apiKeyMiddleware } from '../middlewares/apiKeyMiddleware.js';
 import { validarDatosBody, validarDatosPaginacion, validarIdParam } from '../middlewares/Validaciones.js';
 import { artObjectsScheme } from '../scheme/artObject.js';
 
 const ruta = Router();
+ruta.use(apiKeyMiddleware);
 
 ruta.get('/obra/:idObra', getObraPorId);
 ruta.get('/obras/coleccion', validarDatosPaginacion, getColeccionObras);

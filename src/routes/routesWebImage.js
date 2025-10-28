@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { actualizarWebImages, postWebImages } from '../controllers/controllerWebImage.js';
+import { apiKeyMiddleware } from '../middlewares/apiKeyMiddleware.js';
 import { validarDatosBody, validarIdParam } from '../middlewares/Validaciones.js';
 import { webImagesScheme } from '../scheme/webImage.js';
 
 const ruta = Router();
+ruta.use(apiKeyMiddleware);
 
 ruta.post('/imagen', validarDatosBody(webImagesScheme), postWebImages);
 ruta.put('/imagen/:idImagen', validarIdParam('idImagen'), validarDatosBody(webImagesScheme), actualizarWebImages);

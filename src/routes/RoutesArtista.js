@@ -7,6 +7,7 @@ import {
 	getObrasArtista,
 	postArtista
 } from '../controllers/ControllerArtista.js';
+import { apiKeyMiddleware } from '../middlewares/apiKeyMiddleware.js';
 import {
 	validarDatosBody,
 	validarDatosPaginacion,
@@ -17,6 +18,8 @@ import {
 import { principalMakerScheme } from '../scheme/principalMaker.js';
 
 const ruta = Router();
+ruta.use(apiKeyMiddleware);
+
 //Coleccion de obras de un artista en particular a partir de su nombre
 ruta.get('/coleccion/artista', validarQueryString('nombre'), validarDatosPaginacion, getObrasArtista);
 //todos los artistas y sus especificaciones

@@ -357,3 +357,12 @@ INSERT INTO otherTitles (IdArtObject, alternativeTitle, titleType) VALUES
     (51, 'Una escena de la vida en Laren', 'alternativo'),
     (52, 'Boda judía', 'alternativo'),
     (52, 'Boda judía, se cree que es la boda de la hija del artista Mathilde y G.D. Cohen Tervaert, 1903', 'alternativo');
+
+CREATE TABLE userDevs (
+  IdUserDev SERIAL PRIMARY KEY,
+  developerName VARCHAR(100) NOT NULL,
+  developerEmail VARCHAR(100) UNIQUE NOT NULL,
+  apiKeyHash VARCHAR(50) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pendiente',
+  createdAt TIMESTAMP DEFAULT NOW()
+);
