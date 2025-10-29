@@ -38,11 +38,10 @@ const handleCustomError = (res, error) => {
 	if (typeof error.code === 'string') {
 		const httpStatus = mapSQLErrorToHTTP(error.code);
 		const bodyRespuesta = respuestaError(httpStatus.mensaje, error.detail || error.message);
-		console.log('Handler error: httpStatus: ', httpStatus, 'Repuesta Body: ', bodyRespuesta);
 		return res.status(httpStatus.code).json(bodyRespuesta);
 	}
-	console.log('Error no mapeado:', error);
-	return res.status(500).json(respuestaError('Error interno del servidor', error.message));
+
+	return res.status(500).json(respuestaError('Error no mapeado', error.message));
 };
 
 export { handleCustomError };

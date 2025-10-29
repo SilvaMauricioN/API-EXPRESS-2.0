@@ -5,17 +5,17 @@ dotenv.config();
 
 const { Pool } = pg;
 const pool = new Pool({
-	connectionString: process.env.SUPABASE_URL
-	// ssl: { rejectUnauthorized: false, sslmode: 'require' }
+	connectionString: process.env.DATABASE_URL,
+	ssl: { rejectUnauthorized: false }
 });
 
 const verificarConexion = async () => {
 	try {
 		const client = await pool.connect();
-		console.log('✅ Conectado a la base de datos PostgreSQL de Supabase.');
+		console.log('Conectado a la base de datos PostgreSQL de Supabase.');
 		client.release();
 	} catch (error) {
-		console.error('❌ Error en la conexión a la base de datos de Supabase:', error.message);
+		console.error('Error en la conexión a la base de datos de Supabase:', error.message);
 		process.exit(1);
 	}
 };
@@ -23,7 +23,12 @@ const verificarConexion = async () => {
 verificarConexion();
 
 pool.on('error', (err, client) => {
-	console.error('🚨 Error inesperado en el pool o en un cliente inactivo de Postgres:', err);
+	console.error('Error inesperado en el pool o en un cliente inactivo de Postgres:', err);
+
+	if (err.code === 'ECONNRESET') {
+		console.warn('Conexión reseteada. El pool reconectará automáticamente.');
+		return;
+	}
 
 	if (err.message && err.message.includes(':client_termination')) {
 		console.warn('Advertencia: Cliente de BD terminado abruptamente. Pool lo gestionará.');

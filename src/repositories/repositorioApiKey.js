@@ -15,7 +15,6 @@ const getPorEmail = async (email) => {
 
 const getPorHash = async (hash) => {
 	const result = await pool.query('SELECT * FROM userDevs WHERE apiKeyHash = $1 AND status = $2', [hash, 'aprobado']);
-	console.log('Base de datos: ', result.rows[0], 'Numero: ', result.rowCount, 'result:', result);
 	return result.rowCount > 0;
 };
 
