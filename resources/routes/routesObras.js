@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { actualizarObra, getColeccionObras, getObraPorId, postObra } from '../controllers/ControllerObras.js';
+import { actualizarObra, getColeccionObras, getObraPorId, postObra } from '../controllers/controllerObras.js';
 import { apiKeyMiddleware } from '../middlewares/apiKeyMiddleware.js';
 import { validarDatosBody, validarDatosPaginacion, validarIdParam } from '../middlewares/Validaciones.js';
 import { artObjectsScheme } from '../scheme/artObject.js';

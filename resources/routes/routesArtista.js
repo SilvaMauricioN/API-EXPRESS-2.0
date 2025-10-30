@@ -6,13 +6,12 @@ import {
 	getArtistas,
 	getObrasArtista,
 	postArtista
-} from '../controllers/ControllerArtista.js';
+} from '../controllers/controllerArtista.js';
 import { apiKeyMiddleware } from '../middlewares/apiKeyMiddleware.js';
 import {
 	validarDatosBody,
 	validarDatosPaginacion,
 	validarIdParam,
-	// validarOcupacion,
 	validarQueryString
 } from '../middlewares/Validaciones.js';
 import { principalMakerScheme } from '../scheme/principalMaker.js';

@@ -7,14 +7,4 @@ const ruta = Router();
 
 ruta.post('/', validarDatosBody(userDevsScheme), validarDevs(userDevsScheme), peticionDeKey);
 
-// ruta.post(
-// 	'/',
-// 	(req, res, next) => {
-// 		console.log('🎯 Entró a la ruta POST /');
-// 		console.log('Body:', req.body);
-// 		next();
-// 	},
-// 	peticionDeKey
-// );
-
 export default ruta;
