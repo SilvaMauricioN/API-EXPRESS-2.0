@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Colección - Documentación API</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<header class="encabezado-api">
+			<h1>Documentación de la API del Museo Rijks</h1>
+			<p>Bienvenido a la Api. Aquí encontrarás cómo usar los endpoints. API de consulta a obras del MUSEO RIJKS</p>
+		</header>
+
+		<div class="layout-documentacion">
+			<nav class="barra-lateral">
+				<h2 id="menu-toggle" class="menu-desplegable-titulo">MENU API</h2>
+				<ul>
+					<li><a href="index.html">Inicio</a></li>
+					<li><a href="artistas.html">Artistas</a></li>
+					<li><a href="coleccion.html" class="activo">Obras De Artistas</a></li>
+					<li><a href="coleccionObra.html">Colección De Obras</a></li>
+					<li><a href="detalleObra.html">Detalles De Obra</a></li>
+				</ul>
+			</nav>
+
+			<main class="contenido-documentacion">
+				<section id="coleccion" class="seccion-endpoint">
+					<h2>Colección De Obras De Un Artista</h2>
+					<p>
+						Este endpoint da acceso a la colección con una breve información sobre cada obra de arte de un artista en
+						particular. Los resultados se dividen en páginas. Utilizando los parámetros `pagina` y `limite` puede
+						obtener más resultados, hasta un total de 10.000.
+					</p>
+
+					<div class="metodo-http"><strong>MÉTODO:</strong> <span class="get-badge">GET</span></div>
+
+					<div class="caja-documento">
+						<div class="titulo-documento">URL Base de Colección</div>
+						<div class="contenido-documento">
+							<p id="url-coleccion">http://localhost:8080/api/museorijks/coleccion/artista</p>
+							<button
+								class="btn-copiar"
+								aria-label="Copiar URL de colección"
+								onclick="copiarTexto('url-coleccion', this)"
+							>
+								Copiar
+							</button>
+						</div>
+					</div>
+
+					<h3>Parámetros</h3>
+					<p>Se admiten los siguientes parámetros:</p>
+					<div class="tabla-scroll">
+						<table>
+							<thead>
+								<tr>
+									<th>Parámetro</th>
+									<th>Formato</th>
+									<th>Por defecto</th>
+									<th>Descripción</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Key</td>
+									<td>a-z 0-9</td>
+									<td>-</td>
+									<td>Obligatorio: agregue su clave API a cada solicitud.</td>
+								</tr>
+								<tr>
+									<td>pagina</td>
+									<td>0-n</td>
+									<td>1</td>
+									<td>La página de resultados solicitada.</td>
+								</tr>
+								<tr>
+									<td>limite</td>
+									<td>1-30</td>
+									<td>20</td>
+									<td>El número máximo de resultados por página (máx. 30).</td>
+								</tr>
+								<tr>
+									<td>nombre</td>
+									<td>a-z</td>
+									<td>-</td>
+									<td>Filtra por el nombre del autor. (Ej: `Rembrandt+van+Rijn`)</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<p class="nota"><strong>Nota:</strong> Ten en cuenta que `pagina * limite` no debe superar 10.000.</p>
+
+					<section class="ejemplo">
+						<h3>Ejemplo de Colección</h3>
+
+						<h4>Petición</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<p id="url-coleccion-ej">
+									http://localhost:8080/api/museorijks/coleccion/artista?key={API_KEY}?nombre=Rembrandt+van+Rijn
+								</p>
+								<button
+									class="btn-copiar"
+									aria-label="Copiar URL de ejemplo"
+									onclick="copiarTexto('url-coleccion-ej', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+
+						<h4>Respuesta</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<pre class="codigo-json" id="json-coleccion-res"><code>{
+	"status": "success",
+	"mensaje": "Colección de obras de arte recuperada exitosamente.",
+	"paginacion": {
+		"resultadoTotal": 52,
+		"paginaActual": 1,
+		"limite": 20,
+		"paginasTotales": 3
+	},
+	"data": [
+		{
+			"objectnumber": "SK-C-597",
+			"title": "Retrato de una Mujer, Probablemente Maria Trip (1619-1683)",
+			"hasimage": true,
+			"principalOrFirstMaker": "Rembrandt van Rijn",
+			"longtitle": "Retrato de una Mujer, Probablemente Maria Trip (1619-1683), Rembrandt van Rijn, 1639",
+			"webImage": {
+				"width": 4351,
+				"height": 5754,
+				"url": "https://..."
+			}
+		}
+	]
+}</code></pre>
+								<button
+									class="btn-copiar json"
+									aria-label="Copiar JSON de respuesta"
+									onclick="copiarTexto('json-coleccion-res', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+					</section>
+				</section>
+			</main>
+		</div>
+
+		<footer class="pie-api">
+			<p>&copy; 2025 Todos los derechos reservados.</p>
+		</footer>
+
+		<script src="script.js"></script>
+	</body>
+</html>

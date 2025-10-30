@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Documentación API - Museo Rijks</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<header class="encabezado-api">
+			<h1>Documentación de la API del Museo Rijks</h1>
+			<p>Bienvenido a la Api. Aquí encontrarás cómo usar los endpoints. API de consulta a obras del MUSEO RIJKS</p>
+		</header>
+
+		<div class="layout-documentacion">
+			<nav class="barra-lateral">
+				<h2 id="menu-toggle" class="menu-desplegable-titulo">MENU API</h2>
+				<ul id="menu-lista" class="menu-desplegable-lista">
+					<li><a href="index.html" class="activo">Inicio</a></li>
+					<li><a href="artistas.html">Artistas</a></li>
+					<li><a href="coleccion.html">Obras De Artistas</a></li>
+					<li><a href="coleccionObra.html">Colección De Obras</a></li>
+					<li><a href="detalleObra.html">Detalles De Obra</a></li>
+				</ul>
+			</nav>
+
+			<main class="contenido-documentacion">
+				<section class="seccion-endpoint">
+					<h2>Introducción y Guía de Uso</h2>
+					<p>
+						Esta API permite la consulta de obras de la colección del Museo Rijks. Está diseñada para ser simple y de
+						solo lectura (GET).
+					</p>
+
+					<h3>Cómo Empezar:</h3>
+					<ol>
+						<li>
+							<strong>Obtén tu Clave:</strong> Asegúrate de tener tu clave API. Esta debe ser enviada en el parámetro
+							`key` en cada solicitud.
+						</li>
+						<li>
+							<strong>Consulta la Colección:</strong> Usa el enlace "Colección" para listar obras y obtener sus
+							identificadores.
+						</li>
+						<li>
+							<strong>Consulta el Detalle:</strong> Usa el identificador obtenido para consultar los detalles de una
+							obra específica.
+						</li>
+					</ol>
+				</section>
+
+				<section class="contenedor-req">
+					<h1>Solicitar API Key</h1>
+					<p>Completa el siguiente formulario para solicitar acceso a la API.</p>
+
+					<form id="requestForm" class="apikey-form">
+						<input type="text" name="developerName" placeholder="Tu nombre" required />
+						<input type="email" name="developerEmail" placeholder="Tu correo electrónico" required />
+						<button type="submit">Solicitar API Key</button>
+					</form>
+
+					<div id="successModal" class="modal hidden">
+						<div class="contenedor-modal">
+							<button class="cerrar-modal" id="closeSuccess">&times;</button>
+
+							<h1 class="modal-titulo">Guarde su API KEY</h1>
+							<p class="modal-descrip">
+								Guarde su clave secreta en un lugar seguro, ya que <strong>no podrá volver a verla</strong>. Manténgala
+								a buen recaudo, ya que cualquier persona que tenga su clave API puede realizar solicitudes en su nombre.
+								Si la pierde, tendrá que generar una nueva.
+							</p>
+
+							<!-- Success state: Show API key -->
+							<div class="contenedor-key">
+								<span class="texto-key" id="apiKey"></span>
+								<button id="btnCopiar" class="btn-copiar-key">Copy</button>
+								<!-- <button id="btnCopiar" class="btn-copiar" onclick="copyToClipboard()">Copy</button> -->
+							</div>
+						</div>
+					</div>
+
+					<div id="errorModal" class="modal hidden">
+						<div class="contenedor-modal modal-error">
+							<button class="cerrar-modal" id="closeError">&times;</button>
+
+							<div class="mensaje-error">
+								<svg
+									class="error-icon"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+									<path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+									<circle cx="12" cy="16" r="1" fill="currentColor" />
+								</svg>
+
+								<div id="usuarioError" class="texto-error hidden">
+									<p>
+										<strong id="correoError">Correo electrónico ya registrado.</strong> Esta dirección de correo
+										electrónico ya está asociada a una clave API. Utilice otra dirección de correo electrónico.
+									</p>
+								</div>
+
+								<div id="errorDatos" class="hidden">
+									<p>Hay errores de validación en tu solicitud:</p>
+									<ul id="listaErrores"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+		</div>
+
+		<footer class="pie-api">
+			<p>&copy; 2025 Todos los derechos reservados.</p>
+		</footer>
+
+		<script src="script.js"></script>
+	</body>
+</html>

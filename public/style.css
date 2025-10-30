@@ -1,0 +1,436 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Segoe UI', sans-serif;
+	background-color: #40474f;
+	color: white;
+	line-height: 1.6;
+}
+
+.layout-documentacion {
+	display: flex;
+	min-height: 100vh;
+}
+
+body::-webkit-scrollbar {
+	/* Esta propiedad oculta toda la barra de desplazamiento */
+	display: none;
+}
+
+/* NAV lateral */
+.barra-lateral {
+	width: 180px;
+	color: #fff;
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	border-right: 2px solid #767b81;
+}
+
+.barra-lateral h2 {
+	font-size: 1.2rem;
+}
+
+.barra-lateral ul {
+	list-style: none;
+	padding-left: 0;
+}
+
+.barra-lateral a {
+	text-decoration: none;
+	display: block;
+	padding: 8px 15px;
+	color: #cbd5e1;
+	font-weight: 500;
+	transition: background-color 0.3s;
+}
+
+.barra-lateral a:hover {
+	text-decoration: none;
+	color: #ffffff;
+}
+
+.barra-lateral a.activo {
+	background-color: #181a1b;
+	color: white;
+	font-weight: bold;
+}
+
+/* CONTENIDO principal */
+.contenido-documentacion {
+	flex: 1;
+	padding: 0rem 1.5rem 1.5rem 1.5rem;
+	width: 85%;
+}
+
+/* Encabezado */
+.encabezado-api {
+	text-align: center;
+	padding: 2rem;
+	border-bottom: 2px solid #767b81;
+}
+
+.encabezado-api h1 {
+	font-size: 3rem;
+	margin-bottom: 0.5rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-weight: bold;
+	color: white;
+}
+
+h2 {
+	font-size: 2.5rem;
+}
+
+h3 {
+	font-size: 1.85rem;
+	padding: 1rem 1rem 1rem 0;
+}
+
+h4 {
+	font-size: 1.3rem;
+	margin-top: 1rem;
+}
+.seccion-endpoint {
+	padding-bottom: 1.5rem;
+}
+.seccion-endpoint h2 {
+	margin-bottom: 1rem;
+	padding-bottom: 0.5rem;
+}
+
+ol {
+	padding-left: 1rem;
+}
+
+.caja-documento {
+	background-color: #282c34;
+	color: #fff;
+	border-radius: 6px;
+	margin-top: 1.5rem;
+	overflow: hidden;
+}
+
+.titulo-documento {
+	padding: 1rem;
+	font-weight: bold;
+	border-bottom: 2px solid #444952;
+}
+
+.contenido-documento {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+	overflow-x: auto;
+	max-width: 100%;
+}
+
+.btn-copiar {
+	border: none;
+	padding: 0.4rem 0.7rem;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 0.85rem;
+}
+
+.btn-copiar:hover,
+.btn-copiar:focus {
+	background-color: #5a6378;
+}
+
+.btn-copiar:focus {
+	outline: 2px solid #aaa;
+}
+
+.btn-copiar.json {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 10;
+	margin: 1rem;
+}
+
+/* Tablas */
+.tabla-scroll {
+	overflow-x: auto;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 1rem;
+	background-color: #30353b;
+}
+thead tr th {
+	border-bottom: 1px solid #40474f;
+}
+th,
+td {
+	padding: 0.75rem;
+	text-align: left;
+}
+th + th,
+td + td {
+	border-left: 1px solid #40474f;
+}
+tbody tr:not(:last-child) td {
+	border-bottom: 1px solid #40474f;
+}
+
+.nota {
+	padding: 1rem;
+	margin-top: 1rem;
+	border: 2px solid #767b81;
+	border-radius: 4px;
+}
+
+.codigo-json {
+	color: #87be8a;
+	padding: 1rem;
+	font-family: monospace;
+	font-size: 0.95rem;
+	overflow-x: auto;
+	border-radius: 0 0 6px 6px;
+}
+
+pre {
+	margin: 0;
+	overflow-x: auto;
+	tab-size: 2;
+}
+
+code {
+	display: block;
+	white-space: pre;
+	font-family: 'Courier New', monospace;
+	font-size: 0.95rem;
+	line-height: 1.4;
+}
+
+.apikey-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-top: 1.5rem;
+}
+
+input,
+button {
+	padding: 0.7rem;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	font-size: 1rem;
+}
+
+.apikey-box {
+	border: 2px solid #767b81;
+	padding: 1rem;
+	margin-top: 1rem;
+	display: none;
+	position: relative;
+}
+
+/* Footer */
+.pie-api {
+	text-align: center;
+	padding-top: 1rem;
+	font-size: 0.9rem;
+	border-top: 2px solid #767b81;
+	color: #888;
+}
+
+/* Estilos para el encabezado menu*/
+.menu-desplegable-titulo {
+	padding: 10px 15px;
+	border-bottom: 2px solid #767b81;
+	user-select: none;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* Rspuesta Api */
+
+.contenedor-req {
+	margin-top: 1.5rem;
+	padding: 1rem;
+	background: #fff;
+	border: 1px solid #e5e5e5;
+	border-radius: 12px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+.contenedor-req h1 {
+	color: #181a1b;
+}
+
+.contenedor-req p {
+	color: #181a1b;
+}
+.modal {
+	background: white;
+	border-radius: 16px;
+	width: 100%;
+}
+
+.modal-titulo {
+	font-size: 32px;
+	color: #1a1a1a;
+	margin-bottom: 16px;
+}
+
+.modal-descrip {
+	font-size: 16px;
+	line-height: 1.6;
+	color: #fafafa;
+	margin-bottom: 20px;
+}
+
+.modal-descrip strong {
+	color: #1a1a1a;
+}
+
+.contenedor-key {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 16px 20px;
+	background-color: #f8f8f8;
+	border: 2px solid #00a67e;
+	border-radius: 12px;
+	margin-top: 20px;
+}
+
+.texto-key {
+	flex: 1;
+	font-family: 'Courier New', monospace;
+	font-size: 16px;
+	color: #1a1a1a;
+	word-break: break-all;
+}
+
+.contenedor-error {
+	padding: 20px;
+	color: white;
+	background-color: #fff5f5;
+	border: 2px solid #e53e3e;
+	border-radius: 12px;
+	margin-top: 20px;
+}
+
+.mensaje-error {
+	display: flex;
+	align-items: start;
+	gap: 12px;
+}
+
+.texto-error {
+	font-size: 16px;
+	color: #742a2a;
+	line-height: 1.5;
+}
+
+.texto-error strong {
+	font-weight: 600;
+}
+
+/* MODALES FLOTANTES */
+.hidden {
+	display: none !important;
+}
+
+/* Fondo oscuro detrás del modal */
+.modal {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 999;
+}
+
+/* Contenedor del modal */
+.contenedor-modal {
+	background: #fff;
+	padding: 2rem;
+	border-radius: 1rem;
+	max-width: 500px;
+	width: 90%;
+	position: relative;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+	animation: fadeIn 0.3s ease;
+}
+
+/* Botón de cierre */
+.cerrar-modal {
+	position: absolute;
+	top: -10px;
+	right: 0px;
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+	padding: 12px;
+}
+
+/* Estilo especial para modal de error */
+.modal-error {
+	border-top: 4px solid #e63946;
+}
+
+.mensaje-error {
+	display: flex;
+	gap: 1rem;
+	align-items: flex-start;
+}
+
+.error-icon {
+	color: #e63946;
+	flex-shrink: 0;
+}
+
+.texto-error {
+	color: #333;
+	line-height: 1.4;
+}
+
+/* Animación suave */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10%);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Botón copiar */
+.btn-copiar-key {
+	background-color: #0078ff;
+	color: white;
+	border: none;
+	padding: 0.6rem 1.2rem;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+.btn-copiar-key:hover {
+	background-color: #005fcc;
+}
+
+#listaErrores li {
+	color: black;
+}

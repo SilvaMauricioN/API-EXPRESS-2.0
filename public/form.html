@@ -1,0 +1,40 @@
+<section class="seccion-api-res">
+	<h1>Solicitar API Key</h1>
+	<p>Completa el siguiente formulario para solicitar acceso a la API.</p>
+
+	<form id="requestForm">
+		<input type="text" name="developerName" placeholder="Tu nombre" required />
+		<input type="email" name="developerEmail" placeholder="Tu correo electrónico" required />
+		<button type="submit">Solicitar API Key</button>
+	</form>
+
+	<div id="successModal" class="modal-header hidden">
+		<h1 class="modal-titulo">Guarde su API KEY</h1>
+		<p class="modal-descrip">
+			Guarde su clave secreta en un lugar seguro, ya que <strong>no podrá volver a verla</strong>. Manténgala a buen
+			recaudo, ya que cualquier persona que tenga su clave API puede realizar solicitudes en su nombre. Si la pierde,
+			tendrá que generar una nueva.
+		</p>
+
+		<!-- Success state: Show API key -->
+		<div id="successState" class="contenedor-key">
+			<span class="texto-key" id="apiKey">sk-proj-GXDMiztfHHV9yoL0JacyG--tMKe</span>
+			<button class="btn-copiar" onclick="copyToClipboard()">Copy</button>
+		</div>
+	</div>
+
+	<!-- Error state: Email already registered -->
+	<div id="errorState" class="contenedor-error hidden">
+		<div class="mensaje-error">
+			<svg class="error-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+				<path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+				<circle cx="12" cy="16" r="1" fill="currentColor" />
+			</svg>
+			<p class="texto-error">
+				<strong>Correo electrónico ya registrado.</strong> Esta dirección de correo electrónico ya está asociada a una
+				clave API. Utilice otra dirección de correo electrónico.
+			</p>
+		</div>
+	</div>
+</section>
