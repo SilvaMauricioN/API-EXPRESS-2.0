@@ -23,19 +23,9 @@ export default class Server {
 	}
 	middleware() {
 		this.app.use(express.json());
-		// this.app.use(express.static('Public'));
 		this.app.use(express.urlencoded({ extended: true }));
-
-		// this.app.use(express.json());
 	}
 	routers() {
-		// this.app.use((req, res, next) => {
-		// 	console.log(`📥 ${req.method} ${req.path}`);
-		// 	next();
-		// });
-
-		// console.log('📍 Montando ruta: /api/peticion/key');
-
 		this.app.use('/peticion/key', apiKeyRoutes);
 		this.app.use('/api/museorijks', artistaRoutes);
 		this.app.use('/api/museorijks', obrasRoutes);

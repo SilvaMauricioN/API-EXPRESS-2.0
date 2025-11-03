@@ -60,6 +60,7 @@ const getObraDetalladaPorId = async (numeroObra) => {
         -- Subconsulta: principal o primer autor (1:1)
         (
             SELECT json_build_object(
+                'IdPrincipalMaker', pm.IdPrincipalMaker,
                 'name', pm.name,
                 'placeOfBirth', pm.placeOfBirth,
                 'dateOfBirth', pm.dateOfBirth,
