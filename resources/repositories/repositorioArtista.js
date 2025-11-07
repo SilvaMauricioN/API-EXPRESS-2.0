@@ -11,13 +11,13 @@ const getCantidadArtistas = async () => {
 const getArtistas = async (offset, limite) => {
 	const safeOffset = offset < 0 ? 0 : offset;
 	const query = `
-            SELECT
-								pm.idprincipalmaker,
+             SELECT
+								pm.idprincipalmaker as "IdPrincipalMaker",
                 pm.name,
-                pm.placeofBirth,
-                pm.dateofBirth,
-                pm.dateofDeath,
-                pm.placeofDeath,
+                pm.placeofBirth as "placeOfBirth",
+                pm.dateofBirth as "dateOfBirth",
+                pm.dateofDeath as "dateOfDeath",
+                pm.placeofDeath as "placeOfDeath",
                 nationality, 
                 (
                     SELECT json_agg(DISTINCT o.name)
