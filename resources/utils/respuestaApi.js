@@ -23,7 +23,7 @@ const respuestaExitosa = (mensaje, data = [], paginacion = null, hayResultado = 
 const formatoRespuestaUnico = (data, mensaje = 'Operación exitosa') => {
 	return {
 		status: 'success',
-		mensaje: mensaje,
+		message: mensaje,
 		data: data || null
 	};
 };

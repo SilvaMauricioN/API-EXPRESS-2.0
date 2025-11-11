@@ -89,7 +89,11 @@ const getObraDetalladaPorId = async (numeroObra) => {
     `;
 
 	const data = await pool.query(query, [numeroObra]);
-	return data.rows[0] || null;
+
+	if (data.rows[0] == null) {
+		return null;
+	}
+	return data.rows;
 };
 
 const getObraPorNumeroObjeto = async (numeroObjeto) => {
