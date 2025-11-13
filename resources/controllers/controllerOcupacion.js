@@ -1,5 +1,10 @@
 import * as serviceOcupacion from '../services/serviceOcupacion.js';
-import { formatoRespuestaUnico, respuestaError, respuestaExitosa } from '../utils/respuestaApi.js';
+import {
+	formatoRespuestaColeccion,
+	formatoRespuestaUnico,
+	respuestaError,
+	respuestaExitosa
+} from '../utils/respuestaApi.js';
 
 const getOcupaciones = async (req, res, next) => {
 	try {
@@ -8,7 +13,7 @@ const getOcupaciones = async (req, res, next) => {
 		const { datos, paginacion } = await serviceOcupacion.getOcupaciones(pagina, limite);
 		const mensaje = 'Listado de Ocupaciones recuperado Exitosamente';
 
-		res.status(200).json(formatoRespuestaUnico(datos, paginacion, mensaje));
+		res.status(200).json(formatoRespuestaColeccion(datos, paginacion, mensaje));
 	} catch (error) {
 		next(error);
 	}
