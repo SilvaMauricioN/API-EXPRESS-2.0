@@ -55,7 +55,7 @@ const getArtistaPorId = async (artistaId) => {
 									pm.nationality,
 									json_agg(
 											json_build_object(
-													'idOccupation', o.idOccupation,
+													'idoccupation', o.idOccupation,
 													'name', o.name
 											)
 									) AS occupations
