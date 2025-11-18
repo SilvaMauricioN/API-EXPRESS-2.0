@@ -20,7 +20,10 @@ const getArtistas = async (offset, limite) => {
                 pm.placeofDeath as "placeOfDeath",
                 nationality, 
                 (
-                    SELECT json_agg(DISTINCT o.name)
+                    SELECT json_agg(	json_build_object(
+													'idoccupation', o.idOccupation,
+													'name', o.name
+											))
                     FROM makersOccupations mo 
                     JOIN occupations o ON mo.IdOccupation = o.IdOccupation
                     WHERE mo.IdPrincipalMaker = pm.IdPrincipalMaker
