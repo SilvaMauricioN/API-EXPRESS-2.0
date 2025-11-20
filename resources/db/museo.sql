@@ -6,7 +6,8 @@ CREATE TABLE principalMakers (
     dateOfBirth VARCHAR(20),
     dateOfDeath VARCHAR(20),
     placeOfDeath VARCHAR(255),    
-    nationality VARCHAR(255)
+    nationality VARCHAR(255),
+    deletedAt TIMESTAMP NULL DEFAULT NULL
 );
 
 INSERT INTO principalMakers (name, placeOfBirth, dateOfBirth, dateOfDeath, placeOfDeath, nationality) VALUES 
@@ -37,6 +38,7 @@ CREATE TABLE makersOccupations (
     IdMakerOccupation SERIAL PRIMARY KEY,
     IdPrincipalMaker INTEGER REFERENCES principalMakers(IdPrincipalMaker),
     IdOccupation INTEGER REFERENCES occupations(IdOccupation),
+    deletedAt TIMESTAMP NULL DEFAULT NULL,
     UNIQUE (IdPrincipalMaker, IdOccupation)
 );
 

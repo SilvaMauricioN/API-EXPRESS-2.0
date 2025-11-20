@@ -11,7 +11,7 @@ const asignarOcupacionArtista = async (artistaId, ocupacionId) => {
 };
 
 const deleteRelacionPorArtistaId = async (artistaId) => {
-	await pool.query(`DELETE FROM makersOccupations WHERE idprincipalmaker = $1`, [artistaId]);
+	await pool.query(`UPDATE makersOccupations SET deletedat = NOW() WHERE idprincipalmaker = $1`, [artistaId]);
 };
 
 const deleteRelacionPorOcupacionId = async (ocupacionId) => {

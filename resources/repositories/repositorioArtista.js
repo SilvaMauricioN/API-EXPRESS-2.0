@@ -29,6 +29,7 @@ const getArtistas = async (offset, limite) => {
                     WHERE mo.IdPrincipalMaker = pm.IdPrincipalMaker
                 ) AS "occupations"                
                 FROM principalMakers pm
+								WHERE pm.deletedat IS NULL
 								OFFSET $1
                 LIMIT $2;`;
 
@@ -103,7 +104,8 @@ const actualizarArtista = async (artistaId, artistaData) => {
 };
 
 const deleteArtista = async (artistaId) => {
-	const query = 'DELETE FROM principalMakers WHERE IdPrincipalMaker = $1 RETURNING *';
+	const query = 'UPDATE principalMakers SET deletedat = NOW() WHERE IdPrincipalMaker = $1 RETURNING *';
+
 	const { rows } = await pool.query(query, [artistaId]);
 	return rows[0] || null;
 };
