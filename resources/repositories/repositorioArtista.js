@@ -38,7 +38,7 @@ const getArtistas = async (offset, limite) => {
 };
 //para verificar si existe un artista
 const getArtistaPorNombre = async (nombre) => {
-	const query = `SELECT * FROM principalMakers WHERE LOWER(TRIM(name)) = LOWER(TRIM($1)) LIMIT 1`;
+	const query = `SELECT * FROM principalMakers WHERE LOWER(TRIM(name)) = LOWER(TRIM($1)) AND deletedat IS NULL LIMIT 1`;
 	const { rows } = await pool.query(query, [nombre]);
 	return rows[0] || null;
 };
