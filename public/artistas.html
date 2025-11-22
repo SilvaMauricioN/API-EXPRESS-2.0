@@ -38,7 +38,7 @@
 					<div class="caja-documento">
 						<div class="titulo-documento">URL Base de Colección</div>
 						<div class="contenido-documento">
-							<p id="url-coleccion">http://localhost:8080/api/museorijks/coleccion/artistas</p>
+							<p id="url-coleccion">https://museo-dwgk.onrender.com/api/museorijks</p>
 							<button
 								class="btn-copiar"
 								aria-label="Copiar URL de colección"
@@ -87,12 +87,12 @@
 					<p class="nota"><strong>Nota:</strong> Ten en cuenta que `pagina * limite` no debe superar 10.000.</p>
 
 					<section class="ejemplo">
-						<h3>Ejemplo de Colección</h3>
+						<h3>Ejemplo de Peticiones</h3>
 
-						<h4>Petición</h4>
+						<h4>PETICIÓN GET</h4>
 						<div class="caja-documento">
 							<div class="contenido-documento">
-								<p id="url-coleccion-ej">http://localhost:8080/api/museorijks/coleccion/artista?key={API_KEY}</p>
+								<p id="url-coleccion-ej">https://museo-dwgk.onrender.com/api/museorijks/artistas</p>
 								<button
 									class="btn-copiar"
 									aria-label="Copiar URL de ejemplo"
@@ -106,59 +106,47 @@
 						<h4>Respuesta</h4>
 						<div class="caja-documento">
 							<div class="contenido-documento">
-								<pre class="codigo-json" id="json-coleccion-res"><code>{
-    "status": "success",
-    "message": "Listado de Autores recuperado Exitosamente.",
-    "paginacion": {
-        "resultadoTotal": 13,
-        "paginaActual": 1,
-        "limite": 20,
-        "paginasTotales": 1
-    },
-    "data": [
-        {
-            "idprincipalmaker": 1,
-            "name": "Rembrandt van Rijn",
-            "placeofbirth": "Leiden",
-            "dateofbirth": "1606-07-15",
-            "dateofdeath": "1669-10-08",
-            "placeofdeath": "Ámsterdam",
-            "nationality": "Holandés del Norte",
-            "occupations": [
-                "dibujante",
-                "grabador",
-                "pintor"
-            ]
-        },
-        {
-            "idprincipalmaker": 2,
-            "name": "Vincent van Gogh",
-            "placeofbirth": "Groot Zundert",
-            "dateofbirth": "1853-03-30",
-            "dateofdeath": "1890-07-29",
-            "placeofdeath": "Auvers-sur-Oise",
-            "nationality": "Holandés",
-            "occupations": [
-                "dibujante",
-                "grabador",
-                "pintor"
-            ]
-        },
-        {
-            "idprincipalmaker": 3,
-            "name": "Cornelis Cornelisz. van Haarlem",
-            "placeofbirth": "Haarlem",
-            "dateofbirth": "1562",
-            "dateofdeath": "1638-11-11",
-            "placeofdeath": "Haarlem",
-            "nationality": "Holandés del Norte",
-            "occupations": [
-                "dibujante",
-                "pintor"
-            ]
-        }
-      ...
-  }</code></pre>
+								<pre class="codigo-json" id="json-coleccion-res"><code>
+{  
+	"status": "success",
+	"message": "Listado de Autores recuperado Exitosamente.",
+	"paginacion": {
+			"resultadoTotal": 17,
+			"paginaActual": 1,
+			"limite": 20,
+			"paginasTotales": 1
+	},
+	"data": [
+			{
+					"IdPrincipalMaker": 1,
+					"name": "Rembrandt van Rijn",
+					"placeOfBirth": "Leiden",
+					"dateOfBirth": "1606-07-15",
+					"dateOfDeath": "1669-10-08",
+					"placeOfDeath": "Ámsterdam",
+					"nationality": "Holandés del Norte",
+					"occupations": [
+							"dibujante",
+							"grabador",
+							"pintor"
+					]
+			},
+			{
+					"IdPrincipalMaker": 2,
+					"name": "Vincent van Gogh",
+					"placeOfBirth": "Groot Zundert",
+					"dateOfBirth": "1853-03-30",
+					"dateOfDeath": "1890-07-29",
+					"placeOfDeath": "Auvers-sur-Oise",
+					"nationality": "Holandés",
+					"occupations": [
+							"dibujante",
+							"grabador",
+							"pintor"
+					]
+			},  
+		  ...
+}</code></pre>
 								<button
 									class="btn-copiar json"
 									aria-label="Copiar JSON de respuesta"
@@ -169,6 +157,208 @@
 							</div>
 						</div>
 					</section>
+
+					<section class="ejemplo">
+						<h4>PETICIÓN POST</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<p id="url-coleccion-ej">https://museo-dwgk.onrender.com/api/museorijks/artista</p>
+								<button
+									class="btn-copiar"
+									aria-label="Copiar URL de ejemplo"
+									onclick="copiarTexto('url-coleccion-ej', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+
+						<h4>Cuerpo de Petición</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<pre class="codigo-json" id="json-coleccion-res"><code>
+{
+  "name": "Mauricio Silva",
+  "placeOfBirth": "Bahia Blanca",
+  "dateOfBirth": "1991",
+  "dateOfDeath": "",
+  "placeOfDeath": "",
+  "nationality": "Argentina",
+  "occupations": [1]
+}</code></pre>
+								<button
+									class="btn-copiar json"
+									aria-label="Copiar JSON de respuesta"
+									onclick="copiarTexto('json-coleccion-res', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+
+						<h4>Respuesta</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<pre class="codigo-json" id="json-coleccion-res"><code>
+{
+    "status": "success",
+    "message": "Artista cargado Exitosamente",
+    "data": {
+        "idprincipalmaker": 38,
+        "name": "Mauricio Silva",
+        "placeofbirth": "Bahia Blanca",
+        "dateofbirth": "1991",
+        "dateofdeath": "",
+        "placeofdeath": "",
+        "nationality": "Argentina",
+        "occupations": [
+            {
+                "idOccupation": null,
+                "name": null
+            }
+        ]
+    }
+}</code></pre>
+								<button
+									class="btn-copiar json"
+									aria-label="Copiar JSON de respuesta"
+									onclick="copiarTexto('json-coleccion-res', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+					</section>
+
+					
+					<section class="ejemplo">
+						<h4>PETICIÓN PUT</h4>
+						<p>Es necesario el identificador unico del artista a actualizar</p>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<p id="url-coleccion-ej">https://museo-dwgk.onrender.com/api/museorijks/artista/25</p>
+								<button
+									class="btn-copiar"
+									aria-label="Copiar URL de ejemplo"
+									onclick="copiarTexto('url-coleccion-ej', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+
+						<h4>Cuerpo de Petición</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<pre class="codigo-json" id="json-coleccion-res"><code>{
+    "name": "Mauricio Nicolás Silva",
+    "placeOfBirth": "Amsterdam",
+    "dateOfBirth": "1585",
+    "dateOfDeath": "1634",
+    "placeOfDeath": "Kampen",
+    "nationality": "Holandes",
+    "occupations": [1]
+}</code></pre>
+								<button
+									class="btn-copiar json"
+									aria-label="Copiar JSON de respuesta"
+									onclick="copiarTexto('json-coleccion-res', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+
+						<h4>Respuesta</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<pre class="codigo-json" id="json-coleccion-res"><code>
+{
+    "status": "success",
+    "mensaje": "artista actualizado Correctamente",
+    "data": {
+        "idprincipalmaker": 25,
+        "name": "Mauricio Nicolás Silva",
+        "placeofbirth": "Amsterdam",
+        "dateofbirth": "1585",
+        "dateofdeath": "1634",
+        "placeofdeath": "Kampen",
+        "nationality": "Holandes",
+        "occupations": [
+            {
+                "idOccupation": 1,
+                "name": "grabador"
+            }
+        ]
+    }
+}
+</code></pre>
+								<button
+									class="btn-copiar json"
+									aria-label="Copiar JSON de respuesta"
+									onclick="copiarTexto('json-coleccion-res', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+					</section>
+
+										<section class="ejemplo">
+						<h4>PETICIÓN DELETE</h4>
+						<p>Es necesario el identificador unico del artista a actualizar</p>
+						<p>No se requiere cuerpo de datos en la peticion delete</p>
+
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<p id="url-coleccion-ej">https://museo-dwgk.onrender.com/api/museorijks/artista/25</p>
+								<button
+									class="btn-copiar"
+									aria-label="Copiar URL de ejemplo"
+									onclick="copiarTexto('url-coleccion-ej', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+
+						<h4>Respuesta</h4>
+						<div class="caja-documento">
+							<div class="contenido-documento">
+								<pre class="codigo-json" id="json-coleccion-res"><code>
+{
+    "status": "success",
+    "mensaje": "artista actualizado Correctamente",
+    "data": {
+        "idprincipalmaker": 25,
+        "name": "Mauricio Nicolás Silva",
+        "placeofbirth": "Amsterdam",
+        "dateofbirth": "1585",
+        "dateofdeath": "1634",
+        "placeofdeath": "Kampen",
+        "nationality": "Holandes",
+        "occupations": [
+            {
+                "idOccupation": 1,
+                "name": "grabador"
+            }
+        ]
+    }
+}
+</code></pre>
+								<button
+									class="btn-copiar json"
+									aria-label="Copiar JSON de respuesta"
+									onclick="copiarTexto('json-coleccion-res', this)"
+								>
+									Copiar
+								</button>
+							</div>
+						</div>
+					</section>
+				</section>
+			</main>
+		</div>
 				</section>
 			</main>
 		</div>

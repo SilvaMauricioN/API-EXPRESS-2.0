@@ -39,7 +39,7 @@
 						<div class="titulo-documento">Ejemplo</div>
 						<div class="contenido-documento">
 							<p id="url-coleccion-detalle">
-								http://localhost:8080/api/museorijks/coleccion/obra/<strong>{objectnumber}</strong>
+								https://museo-dwgk.onrender.com/api/museorijks/obra<strong>{objectnumber}</strong>
 							</p>
 							<button
 								class="btn-copiar"
@@ -86,9 +86,7 @@
 						<h4>Petición de Ejemplo</h4>
 						<div class="caja-documento">
 							<div class="contenido-documento">
-								<p id="url-coleccion-detalle-ej">
-									http://localhost:8080/api/museorijks/coleccion/obra/SK-A-3262?id=TU_CLAVE_AQUI
-								</p>
+								<p id="url-coleccion-detalle-ej">https://museo-dwgk.onrender.com/api/museorijks/obra/SK-A-3262</p>
 								<button
 									class="btn-copiar"
 									aria-label="Copiar URL de ejemplo"
@@ -102,10 +100,10 @@
 						<h4>Estructura de la Respuesta (Objeto Detalle)</h4>
 						<div class="caja-documento">
 							<div class="contenido-documento">
-								<pre class="codigo-json" id="json-coleccion-detalle-res"><code>{
+								<pre class="codigo-json" id="json-coleccion-detalle-res"><code>
+{
 	"status": "success",
-	"mensaje": "Obra de arte recuperada exitosamente.",
-	"hayResultado": true,
+	"message": "Obra de arte recuperada exitosamente.",
 	"data": [
 		{
 			"objectnumber": "SK-A-3262",
@@ -114,23 +112,45 @@
 			"hasimage": true,
 			"productionplaces": [],
 			"description": "Autorretrato de Vincent van Gogh. Busto con chaqueta marrón y sombrero gris.",
-			"plaquedescription": "Después de escuchar a su hermano Theo describir el nuevo estilo colorido del arte francés,
-					Vincent decidió en 1886 mudarse a París. Pronto comenzó a experimentar con el nuevo idioma en una serie de autorretratos.
-					Esto fue principalmente para evitar el gasto de usar modelos. Aquí se pintó a sí mismo como un parisino apuesto,
-					con pinceladas sueltas y regulares en colores llamativos.",
-			"materials": [],
+			"plaquedescription": "Después de escuchar a su hermano Theo describir el nuevo estilo colorido del arte francés, Vincent decidió en 1886 mudarse a París. Pronto comenzó a experimentar con el nuevo idioma en una serie de autorretratos. Esto fue principalmente para evitar el gasto de usar modelos. Aquí se pintó a sí mismo como un parisino apuesto, con pinceladas sueltas y regulares en colores llamativos.",
+			"materials": [
+				"cartón",
+				"pintura al óleo (pintura)"
+			],
 			"techniques": [],
 			"physicalmedium": "cartón",
 			"sclabelline": "Vincent van Gogh (1853-1890), óleo sobre cartón, 1887",
-				"historicaldescription": "Vincent se mudó a París en 1886, después de enterarse por su hermano Theo del nuevo y colorido estilo
-					de pintura francesa. Sin perder tiempo, lo probó en varios autorretratos. 
-					Hizo esto principalmente para evitar tener que pagar por un modelo.
-					Utilizando pinceladas rítmicas en colores llamativos, se retrató aquí como un parisino vestido a la moda.",
-			"objectTypes": [],
-			"otherTitles": [],
-			"datings": {},
-			"principalOrFirstMaker": {},
-			"webImage": {}
+			"historicaldescription": "Vincent se mudó a París en 1886, después de enterarse por su hermano Theo del nuevo y colorido estilo de pintura francesa. Sin perder tiempo, lo probó en varios autorretratos. Hizo esto principalmente para evitar tener que pagar por un modelo. Utilizando pinceladas rítmicas en colores llamativos, se retrató aquí como un parisino vestido a la moda.",
+			"objectTypes": [
+				"pintura"
+			],
+			"otherTitles": [
+				{
+					"alternativeTitle": "Autorretrato",
+					"titleType": "alternativo"
+				}
+			],
+			"datings": {
+				"presentingDate": "1887",
+				"sortingDate": 1887,
+				"period": 19,
+				"yearEarly": 1887,
+				"yearLate": 1887
+			},
+			"principalOrFirstMaker": {
+				"IdPrincipalMaker": 2,
+				"name": "Vincent van Gogh",
+				"placeOfBirth": "Groot Zundert",
+				"dateOfBirth": "1853-03-30",
+				"dateOfDeath": "1890-07-29",
+				"placeOfDeath": "Auvers-sur-Oise",
+				"nationality": "Holandés"
+			},
+			"webImage": {
+				"width": 4487,
+				"height": 5558,
+				"url": "https://lh3.googleusercontent.com/Ckjq-HkB2XhEsbuMsei0MR5fLTODfkcXY8qQTG-XLHVxE0jLO9DnSYaVE8n1kCrcm9AMKzoWB2w03LrY0v7eoj5hYw=s0"
+			}
 		}
 	]
 }</code></pre>

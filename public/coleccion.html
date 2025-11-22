@@ -39,7 +39,7 @@
 					<div class="caja-documento">
 						<div class="titulo-documento">URL Base de Colección</div>
 						<div class="contenido-documento">
-							<p id="url-coleccion">http://localhost:8080/api/museorijks/coleccion/artista</p>
+							<p id="url-coleccion">https://museo-dwgk.onrender.com/api/museorijks/artista</p>
 							<button
 								class="btn-copiar"
 								aria-label="Copiar URL de colección"
@@ -100,7 +100,7 @@
 						<div class="caja-documento">
 							<div class="contenido-documento">
 								<p id="url-coleccion-ej">
-									http://localhost:8080/api/museorijks/coleccion/artista?key={API_KEY}?nombre=Rembrandt+van+Rijn
+									https://museo-dwgk.onrender.com/api/museorijks/artistas?nombre=Rembrandt+van+Rijn
 								</p>
 								<button
 									class="btn-copiar"
@@ -115,29 +115,43 @@
 						<h4>Respuesta</h4>
 						<div class="caja-documento">
 							<div class="contenido-documento">
-								<pre class="codigo-json" id="json-coleccion-res"><code>{
+								<pre class="codigo-json" id="json-coleccion-res"><code>
+{
 	"status": "success",
-	"mensaje": "Colección de obras de arte recuperada exitosamente.",
+	"message": "Colección de obras de arte recuperada exitosamente.",
 	"paginacion": {
-		"resultadoTotal": 52,
+		"resultadoTotal": 6,
 		"paginaActual": 1,
 		"limite": 20,
-		"paginasTotales": 3
+		"paginasTotales": 1
 	},
 	"data": [
 		{
-			"objectnumber": "SK-C-597",
-			"title": "Retrato de una Mujer, Probablemente Maria Trip (1619-1683)",
+			"objectnumber": "SK-C-216",
+			"title": "Isaac y Rebeca, Conocidos como \"La Novia Judía\"",
 			"hasimage": true,
 			"principalOrFirstMaker": "Rembrandt van Rijn",
-			"longtitle": "Retrato de una Mujer, Probablemente Maria Trip (1619-1683), Rembrandt van Rijn, 1639",
+			"longtitle": "Isaac y Rebeca, Conocidos como \"La Novia Judía\" , Rembrandt van Rijn, c. 1665 - c. 1669",
 			"webImage": {
-				"width": 4351,
-				"height": 5754,
-				"url": "https://..."
+				"width": 7620,
+				"height": 5542,
+				"url": "https://lh3.googleusercontent.com/mAyAjvYjIeAIlByhJx1Huctgeb58y7519XYP38oL1FXarhVlcXW7kxuwayOCFdnwtOp6B6F0HJmmws-Ceo5b_pNSSQs=s0"
 			}
-		}
-	]
+		},
+		{
+			"objectnumber": "SK-C-5",
+			"title": "La ronda de noche Compañía de Milicia del Distrito II bajo el mando del Capitán Frans Banninck Cocq",
+			"hasimage": true,
+			"principalOrFirstMaker": "Rembrandt van Rijn",
+			"longtitle": "La ronda de noche Compañía de Milicia del Distrito II bajo el mando del Capitán Frans Banninck Cocq, Rembrandt van Rijn, 1642",
+			"webImage": {
+				"width": 14645,
+				"height": 12158,
+				"url": "https://lh3.googleusercontent.com/SsEIJWka3_cYRXXSE8VD3XNOgtOxoZhqW1uB6UFj78eg8gq3G4jAqL4Z_5KwA12aD7Leqp27F653aBkYkRBkEQyeKxfaZPyDx0O8CzWg=s0"
+			}
+		},
+		]
+		...
 }</code></pre>
 								<button
 									class="btn-copiar json"

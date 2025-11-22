@@ -48,12 +48,22 @@ Respuesta:
 	"status": "success",
 	"message": "Listado de Autores recuperado Exitosamente.",
 	"paginacion": {
-		"resultadoTotal": 14,
+		"resultadoTotal": 17,
 		"paginaActual": 1,
 		"limite": 20,
 		"paginasTotales": 1
 	},
 	"data": [
+		{
+			"IdPrincipalMaker": 1,
+			"name": "Rembrandt van Rijn",
+			"placeOfBirth": "Leiden",
+			"dateOfBirth": "1606-07-15",
+			"dateOfDeath": "1669-10-08",
+			"placeOfDeath": "Ámsterdam",
+			"nationality": "Holandés del Norte",
+			"occupations": ["dibujante", "grabador", "pintor"]
+		},
 		{
 			"IdPrincipalMaker": 2,
 			"name": "Vincent van Gogh",
@@ -62,20 +72,7 @@ Respuesta:
 			"dateOfDeath": "1890-07-29",
 			"placeOfDeath": "Auvers-sur-Oise",
 			"nationality": "Holandés",
-			"occupations": [
-				{
-					"idoccupation": 1,
-					"name": "grabador"
-				},
-				{
-					"idoccupation": 2,
-					"name": "dibujante"
-				},
-				{
-					"idoccupation": 3,
-					"name": "pintor"
-				}
-			]
+			"occupations": ["dibujante", "grabador", "pintor"]
 		}
 	]
 }
